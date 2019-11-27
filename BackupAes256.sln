@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackupAes256", "BackupAes256\BackupAes256.csproj", "{4F08C371-469F-4A64-B2E3-C929C0524111}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4F08C371-469F-4A64-B2E3-C929C0524111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F08C371-469F-4A64-B2E3-C929C0524111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F08C371-469F-4A64-B2E3-C929C0524111}.Debug|x64.ActiveCfg = Debug|x64
+		{4F08C371-469F-4A64-B2E3-C929C0524111}.Debug|x64.Build.0 = Debug|x64
+		{4F08C371-469F-4A64-B2E3-C929C0524111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F08C371-469F-4A64-B2E3-C929C0524111}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F08C371-469F-4A64-B2E3-C929C0524111}.Release|x64.ActiveCfg = Release|x64
+		{4F08C371-469F-4A64-B2E3-C929C0524111}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DDD069AA-9265-4DA4-9437-13A57574C4D6}
+	EndGlobalSection
+EndGlobal
