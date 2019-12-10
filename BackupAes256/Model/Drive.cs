@@ -636,10 +636,10 @@
         public void CloseHybridFile(ConcurrentQueue<BackgroundMessage> quReturn)
         {
             short hBlockPaddingBytes;
-            int i, iTotalTextBytesLength;
+            int i, iMinimumKeyLength, iTotalTextBytesLength;
             long kLengthOfData;
             byte[] abRandomBytes, abSignature, abTextBytes, abVerificationBytes, abWrappedKey;
-            CryptoKey[] aRecipientsSymmetric = new CryptoKey[_aAsymmetricEncryptionKeys.Length];
+            CryptoKey EncryptionKey;
             StringBuilder HeaderBuilder = new StringBuilder();
 
             _AuthenticationStream.Position = 0;
@@ -666,20 +666,26 @@
             HeaderBuilder.AppendLine("\t\t" + csHybridFileSignatureOpenTag + _TextConverter.BytesToBase64String(abSignature) + csHybridFileSignatureCloseTag);
             HeaderBuilder.AppendLine("\t" + csHybridFileFromCloseTag);
 
+            iMinimumKeyLength = int.MaxValue;
             for (i = 0; i < _aAsymmetricEncryptionKeys.Length; i++)
             {
-                abRandomBytes = new byte[_aAsymmetricEncryptionKeys[i].iBytes - ciPkcs1PaddingByteDifference];
-                _Cryptography.GetRandomBytes(abRandomBytes);
-                abWrappedKey = _Cryptography.EncryptRsa(abRandomBytes, _aAsymmetricEncryptionKeys[i]);
-                aRecipientsSymmetric[i] = new CryptoKey(_aAsymmetricEncryptionKeys[i].sName, CryptoKey.nKeyFormat.KeePass, CryptoKey.nKeyType.Symmetric, _Cryptography.ComputeSHA256(abRandomBytes));
+                if (_aAsymmetricEncryptionKeys[i].iBytes < iMinimumKeyLength)
+                    iMinimumKeyLength = _aAsymmetricEncryptionKeys[i].iBytes;
+            }
+            abRandomBytes = new byte[iMinimumKeyLength - ciPkcs1PaddingByteDifference];
+            _Cryptography.GetRandomBytes(abRandomBytes);
+            EncryptionKey = new CryptoKey(string.Empty, CryptoKey.nKeyFormat.KeePass, CryptoKey.nKeyType.Symmetric, _Cryptography.ComputeSHA256(abRandomBytes));
 
+            for (i = 0; i < _aAsymmetricEncryptionKeys.Length; i++)
+            {
+
+                abWrappedKey = _Cryptography.EncryptRsa(abRandomBytes, _aAsymmetricEncryptionKeys[i]);
                 HeaderBuilder.AppendLine("\t" + csHybridFileToOpenTag);
                 HeaderBuilder.AppendLine("\t\t" + csHybridFileExponentOpenTag + _aAsymmetricEncryptionKeys[i].sRsaExponentBase64 + csHybridFileExponentCloseTag);
                 HeaderBuilder.AppendLine("\t\t" + csHybridFileModulusOpenTag + _aAsymmetricEncryptionKeys[i].sRsaModulusBase64 + csHybridFileModulusCloseTag);
                 HeaderBuilder.AppendLine("\t\t" + csHybridFileWrappedKeyOpenTag + _TextConverter.BytesToBase64String(abWrappedKey) + csHybridFileWrappedKeyCloseTag);
                 HeaderBuilder.AppendLine("\t" + csHybridFileToCloseTag);
             }
-
             HeaderBuilder.Append(csHybridFileCloseTag);
             abTextBytes = _TextConverter.StringToBytes(HeaderBuilder.ToString());
 
@@ -697,31 +703,27 @@
 
             kLengthOfData = ciVerificationBytesLength + CryptoServices.ciIvOrSaltBytesLength + ciBlockPaddingExtraBytes + ciVerificationBytesLength + _AuthenticationStream.Length;
             hBlockPaddingBytes = (short)ComputeBlockPaddingBytes(kLengthOfData, ciHeaderBlockSize);
+            _AuthenticationStream.Position = 0;
 
-            for (i = 0; i < aRecipientsSymmetric.Length; i++)
+            using (FileStream DestinationFileStream = new FileStream(sRootPathAndFile, FileMode.Append, FileAccess.Write))
             {
-                _AuthenticationStream.Position = 0;
+                DestinationFileStream.Write(abVerificationBytes, 0, ciVerificationBytesLength);                  
+                _Cryptography.GetRandomBytes(_abInitializationVector);
+                DestinationFileStream.Write(_abInitializationVector, 0, CryptoServices.ciIvOrSaltBytesLength);
 
-                using (FileStream DestinationFileStream = new FileStream(sRootPathAndFile, FileMode.Append, FileAccess.Write))
+                using (ICryptoTransform AesEncryptor = _Cryptography.CreateAesEncryptor(_abInitializationVector, EncryptionKey))
                 {
-                    DestinationFileStream.Write(abVerificationBytes, 0, ciVerificationBytesLength);                  
-                    _Cryptography.GetRandomBytes(_abInitializationVector);
-                    DestinationFileStream.Write(_abInitializationVector, 0, CryptoServices.ciIvOrSaltBytesLength);
-
-                    using (ICryptoTransform AesEncryptor = _Cryptography.CreateAesEncryptor(_abInitializationVector, aRecipientsSymmetric[i]))
+                    using (CryptoStream AesEncryptionStream = new CryptoStream(DestinationFileStream, AesEncryptor, CryptoStreamMode.Write))
                     {
-                        using (CryptoStream AesEncryptionStream = new CryptoStream(DestinationFileStream, AesEncryptor, CryptoStreamMode.Write))
+                        AesEncryptionStream.Write(BitConverter.GetBytes(hBlockPaddingBytes), 0, 2);             // store the size of the padding
+                        if (hBlockPaddingBytes > 0)
                         {
-                            AesEncryptionStream.Write(BitConverter.GetBytes(hBlockPaddingBytes), 0, 2);             // store the size of the padding
-                            if (hBlockPaddingBytes > 0)
-                            {
-                                abRandomBytes = new byte[hBlockPaddingBytes];
-                                _Cryptography.GetRandomBytes(abRandomBytes, hBlockPaddingBytes);
-                                AesEncryptionStream.Write(abRandomBytes, 0, hBlockPaddingBytes);
-                            }
-                            AesEncryptionStream.Write(abVerificationBytes, 0, ciVerificationBytesLength);
-                            CopyWithProgress(_AuthenticationStream, AesEncryptionStream, quReturn);
+                            abRandomBytes = new byte[hBlockPaddingBytes];
+                            _Cryptography.GetRandomBytes(abRandomBytes, hBlockPaddingBytes);
+                            AesEncryptionStream.Write(abRandomBytes, 0, hBlockPaddingBytes);
                         }
+                        AesEncryptionStream.Write(abVerificationBytes, 0, ciVerificationBytesLength);
+                        CopyWithProgress(_AuthenticationStream, AesEncryptionStream, quReturn);
                     }
                 }
             }
@@ -998,7 +1000,7 @@
         /// <param name=""></param>
         /// <param name=""></param>
         /// <param name=""></param>
-        public BackgroundMessage.nReturnCode DecryptHybridStream(Stream SourceStream, long kStartToDecrypt, long kLengthToDecrypt, ConcurrentQueue<BackgroundMessage> quReturn)
+        public BackgroundMessage.nReturnCode DecryptHybridStream(Stream SourceStream, long kStartToDecrypt, ConcurrentQueue<BackgroundMessage> quReturn)
         {
             bool isVerified = true;
             byte[] abPaddingBuffer, abUnwrappedRandomBytes, abVerificationEncrypted, abVerificationUnencrypted;
@@ -1007,81 +1009,73 @@
             CryptoKey SymmetricKey;
             BackgroundMessage.nReturnCode eReturn = BackgroundMessage.nReturnCode.WrongFileFormat;
 
-            // foreach (CryptoKey DecryptionKey in ltPublicKeys)
-            // {
             SourceStream.Position = kStartToDecrypt;
             abVerificationUnencrypted = new byte[ciVerificationBytesLength];
 
-            using (MemoryStream IntermediateStream = new MemoryStream())
-            {
-                CopyWithProgress(SourceStream, IntermediateStream, kLengthToDecrypt);
-                IntermediateStream.Position = 0;
-                kBytesRead = IntermediateStream.Read(abVerificationUnencrypted, 0, ciVerificationBytesLength);
+            kBytesRead = SourceStream.Read(abVerificationUnencrypted, 0, ciVerificationBytesLength);
 
-                if (kBytesRead != ciVerificationBytesLength)
+            if (kBytesRead != ciVerificationBytesLength)
+            {
+                eReturn = BackgroundMessage.nReturnCode.WrongFileFormat;
+            }
+            else
+            {
+                kBytesRead = SourceStream.Read(_abInitializationVector, 0, CryptoServices.ciIvOrSaltBytesLength);
+
+                if (kBytesRead != CryptoServices.ciIvOrSaltBytesLength)
                 {
                     eReturn = BackgroundMessage.nReturnCode.WrongFileFormat;
                 }
                 else
                 {
-                    kBytesRead = IntermediateStream.Read(_abInitializationVector, 0, CryptoServices.ciIvOrSaltBytesLength);
-
-                    if (kBytesRead != CryptoServices.ciIvOrSaltBytesLength)
+                    abUnwrappedRandomBytes = _Cryptography.DecryptRsa(_SelectedEncryptionKey);
+                    if (abUnwrappedRandomBytes != null)
                     {
-                        eReturn = BackgroundMessage.nReturnCode.WrongFileFormat;
-                    }
-                    else
-                    {
-                        abUnwrappedRandomBytes = _Cryptography.DecryptRsa(_SelectedEncryptionKey);
-                        if (abUnwrappedRandomBytes != null)
+                        SymmetricKey = new CryptoKey(_SelectedEncryptionKey.sName, CryptoKey.nKeyFormat.KeePass, CryptoKey.nKeyType.Symmetric, _Cryptography.ComputeSHA256(abUnwrappedRandomBytes));
+                        using (ICryptoTransform AesDecryptor = _Cryptography.CreateAesDecryptor(_abInitializationVector, SymmetricKey))
                         {
-                            SymmetricKey = new CryptoKey(_SelectedEncryptionKey.sName, CryptoKey.nKeyFormat.KeePass, CryptoKey.nKeyType.Symmetric, _Cryptography.ComputeSHA256(abUnwrappedRandomBytes));
-                            using (ICryptoTransform AesDecryptor = _Cryptography.CreateAesDecryptor(_abInitializationVector, SymmetricKey))
+                            try
                             {
-                                try
+                                using (CryptoStream AesCryptoStream = new CryptoStream(SourceStream, AesDecryptor, CryptoStreamMode.Read))
                                 {
-                                    using (CryptoStream AesCryptoStream = new CryptoStream(IntermediateStream, AesDecryptor, CryptoStreamMode.Read))
+                                    AesCryptoStream.Read(_abFileBlockBuffer, 0, 2);
+                                    hBlockPaddingBytes = BitConverter.ToInt16(_abFileBlockBuffer, 0);
+                                    if ((hBlockPaddingBytes < 0) || (hBlockPaddingBytes >= ciHeaderBlockSize))
+                                        eReturn = BackgroundMessage.nReturnCode.NoAsymmetricKey;
+                                    else
                                     {
-                                        AesCryptoStream.Read(_abFileBlockBuffer, 0, 2);
-                                        hBlockPaddingBytes = BitConverter.ToInt16(_abFileBlockBuffer, 0);
-                                        if ((hBlockPaddingBytes < 0) || (hBlockPaddingBytes >= ciHeaderBlockSize))
-                                            eReturn = BackgroundMessage.nReturnCode.NoAsymmetricKey;
+                                        kBytesRead = ciVerificationBytesLength + CryptoServices.ciIvOrSaltBytesLength + hBlockPaddingBytes + 2;
+                                        abPaddingBuffer = new byte[hBlockPaddingBytes];
+                                        AesCryptoStream.Read(abPaddingBuffer, 0, hBlockPaddingBytes);
+                                        abVerificationEncrypted = new byte[ciVerificationBytesLength];
+                                        kBytesRead += AesCryptoStream.Read(abVerificationEncrypted, 0, ciVerificationBytesLength);
+
+                                        for (int i = 0; i < ciVerificationBytesLength; i++)
+                                            isVerified = isVerified && (abVerificationUnencrypted[i] == abVerificationEncrypted[i]);
+
+                                        if (isVerified)
+                                        {
+                                            // TODO (kBytesRead + CryptoServices.ciIvOrSaltBytesLength > kLengthToDecrypt) && (kBytesRead < kLengthToDecrypt)
+                                            eReturn = BackgroundMessage.nReturnCode.DecryptionSuccessful;
+                                            quReturn.Enqueue(new BackgroundMessage(BackgroundMessage.nType.UserMessage, BackgroundMessage.nReturnCode.FoundPrivateKey, _SelectedEncryptionKey.sName));
+                                            kBytesRead += CopyWithProgress(AesCryptoStream, _AuthenticationStream, quReturn);
+                                        }
                                         else
                                         {
-                                            kBytesRead = ciVerificationBytesLength + CryptoServices.ciIvOrSaltBytesLength + hBlockPaddingBytes + 2;
-                                            abPaddingBuffer = new byte[hBlockPaddingBytes];
-                                            AesCryptoStream.Read(abPaddingBuffer, 0, hBlockPaddingBytes);
-                                            abVerificationEncrypted = new byte[ciVerificationBytesLength];
-                                            kBytesRead += AesCryptoStream.Read(abVerificationEncrypted, 0, ciVerificationBytesLength);
-
-                                            for (int i = 0; i < ciVerificationBytesLength; i++)
-                                                isVerified = isVerified && (abVerificationUnencrypted[i] == abVerificationEncrypted[i]);
-
-                                            if (isVerified)
-                                            {
-                                                // TODO (kBytesRead + CryptoServices.ciIvOrSaltBytesLength > kLengthToDecrypt) && (kBytesRead < kLengthToDecrypt)
-                                                eReturn = BackgroundMessage.nReturnCode.DecryptionSuccessful;
-                                                quReturn.Enqueue(new BackgroundMessage(BackgroundMessage.nType.UserMessage, BackgroundMessage.nReturnCode.FoundPrivateKey, _SelectedEncryptionKey.sName));
-                                                kBytesRead += CopyWithProgress(AesCryptoStream, _AuthenticationStream, quReturn);
-                                            }
-                                            else
-                                            {
-                                                eReturn = BackgroundMessage.nReturnCode.NoSymmetricKey;
-                                            }
+                                            eReturn = BackgroundMessage.nReturnCode.NoSymmetricKey;
                                         }
                                     }
                                 }
-                                catch (CryptographicException)
-                                {
-                                    eReturn = BackgroundMessage.nReturnCode.NoAsymmetricKey;
-                                    AesDecryptor.Dispose();
-                                }
+                            }
+                            catch (CryptographicException)
+                            {
+                                eReturn = BackgroundMessage.nReturnCode.NoAsymmetricKey;
+                                AesDecryptor.Dispose();
                             }
                         }
                     }
                 }
             }
-            // }
             return eReturn;
         }
 
@@ -1644,9 +1638,6 @@
                                 kStartToDecrypt = SourceFileStream.Position;
                                 kLengthToDecrypt = SourceFileStream.Length - kStartToDecrypt;
 
-                                if (_eEncryptionType == nEncryptionType.FileAsymmetric)
-                                    kLengthToDecrypt /= _aAsymmetricEncryptionKeys.Length;
-
                                 if (kLengthToDecrypt > _iWorkingMemoryLimit)
                                 {
                                     _sTemporaryFilePath = GetTemporaryFilePath(csSymmetricFileExtension);
@@ -1668,9 +1659,7 @@
                                         {
                                             if (_aAsymmetricEncryptionKeys[i].HashIdEquals(_SelectedEncryptionKey.abHashId))
                                             {
-                                                // qyKeys = from k in _ltAllKeys where (k.eType == CryptoKey.nKeyType.AsymmetricPrivate) || (k.eType == CryptoKey.nKeyType.AsymmetricPublic) select k;
-
-                                                eReturn = DecryptHybridStream(SourceFileStream, kStartToDecrypt, kLengthToDecrypt, quReturn);
+                                                eReturn = DecryptHybridStream(SourceFileStream, kStartToDecrypt, quReturn);
                                                 if (eReturn == BackgroundMessage.nReturnCode.DecryptionSuccessful)
                                                 {
                                                     eReturn = AuthenticateHybridStream();
@@ -1681,8 +1670,6 @@
                                                     }
                                                 }
                                             }
-                                            else
-                                                kStartToDecrypt += kLengthToDecrypt;
                                         }
                                     }
                                 }

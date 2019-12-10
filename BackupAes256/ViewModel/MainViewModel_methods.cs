@@ -51,7 +51,7 @@
             _dyTranslations.Add("DestinationOnly", "destination only");
             _dyTranslations.Add("DestinationSizeText", "destination size");
             _dyTranslations.Add("DriveText", "drive");
-            _dyTranslations.Add("DummyDriveName", "not saved");
+            _dyTranslations.Add("EmptyDriveName", "not saved");
             _dyTranslations.Add("Encrypted", "encrypted");
             _dyTranslations.Add("ErrorDirectoriesIdentical", "Identical or nested directories cannot be synchronized.");
             _dyTranslations.Add("ErrorFilesIdentical", "Identical files cannot be synchronized.");
@@ -119,7 +119,7 @@
             _dyTranslations.Add("OnDrive", "save on drive");
             _dyTranslations.Add("PleaseCheck", "please check");
             _dyTranslations.Add("ProgrammingError", "A programming error occurred. I am sorry, this should not have happened.");
-            _dyTranslations.Add("ProgramVersion", "Program version " + sProgramVersion + " of 26/11/2019 is ready.");
+            _dyTranslations.Add("ProgramVersion", "Program version " + sProgramVersion + " of 10/12/2019 is ready.");
             _dyTranslations.Add("Progress", "progress");
             _dyTranslations.Add("ReadDrivesAndKeys", "re-read drives");
             _dyTranslations.Add("RelativePathText", "relative path");
@@ -194,7 +194,7 @@
             _dyTranslations.Add("DestinationOnly", "nur Ziel");
             _dyTranslations.Add("DestinationSizeText", "Größe Ziel");
             _dyTranslations.Add("DriveText", "Laufwerk");
-            _dyTranslations.Add("DummyDriveName", "ungespeichert");
+            _dyTranslations.Add("EmptyDriveName", "ungespeichert");
             _dyTranslations.Add("Encrypted", "verschlüsselt");
             _dyTranslations.Add("ErrorDirectoriesIdentical", "Identische oder in einander enthaltene Verzeichnisse können nicht synchronisiert werden.");
             _dyTranslations.Add("ErrorFilesIdentical", "Identische Dateien können nicht synchronisiert werden.");
@@ -262,7 +262,7 @@
             _dyTranslations.Add("OnDrive", "auf Laufwerk");
             _dyTranslations.Add("PleaseCheck", "bitte überprüfen");
             _dyTranslations.Add("ProgrammingError", "Ein Programmierfehler ist aufgetreten. Entschuldigung, das hätte nicht passieren dürfen.");
-            _dyTranslations.Add("ProgramVersion", "Die Programmversion " + sProgramVersion + " vom 26.11.2019 ist bereit.");
+            _dyTranslations.Add("ProgramVersion", "Die Programmversion " + sProgramVersion + " vom 10.12.2019 ist bereit.");
             _dyTranslations.Add("Progress", "Fortschritt");
             _dyTranslations.Add("ReadDrivesAndKeys", "Laufwerke neu lesen");
             _dyTranslations.Add("RelativePathText", "Relativer Pfad");
@@ -523,7 +523,7 @@
                 case BackgroundMessage.nReturnCode.StartEncryption: sMessageText = sStartEncryption; break;
                 case BackgroundMessage.nReturnCode.StartFillKey: sMessageText = sStartFillKey; break;
                 case BackgroundMessage.nReturnCode.UnspecifiedError: sMessageText = sUnspecifiedError; break;
-                case BackgroundMessage.nReturnCode.WrongFileFormat: sMessageText = sWrongFileFormat; break;
+                case BackgroundMessage.nReturnCode.WrongFileFormat: sMessageText = string.Format(sWrongFileFormat, Message.sText); break;
             }
             return new Property(Message.TimeStamp, sMessageText);
         }
@@ -1075,7 +1075,7 @@
         /// <summary></summary>
         private void RequeryDisplayedDrives()
         {
-            Drive DummyDrive = new Drive(Translate("DummyDriveName"));
+            Drive DummyDrive = new Drive(Translate("EmptyDriveName"));
             IEnumerable<Drive> qyDrives;
 
             _blDrives.Clear();

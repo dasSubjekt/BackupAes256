@@ -15,7 +15,7 @@
 
     public partial class MainViewModel : ViewModelBase
     {
-        private const int ciDefaultRowHeight = 45;
+        private const int ciDefaultRowHeight = 60;
         private const int ciProgrssBarDefaultMaximum = 1;
 
         /// <summary>Enumerated type of menu tabs. The predefined numbers are for <c>TabControl.SelectedIndex</c>.</summary>
@@ -837,7 +837,8 @@
         /// <summary></summary>
         public int iRowHeightEncrypted
         {
-            get { return isSourceOrDestinationEncrypted ? ciDefaultRowHeight : 0; }
+            // get { return isSourceOrDestinationEncrypted ? ciDefaultRowHeight : 0; }
+            get { return 0; }
         }
 
         /// <summary></summary>

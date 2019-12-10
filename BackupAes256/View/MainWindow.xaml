@@ -43,16 +43,16 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0" />
                         <RowDefinition Height="0" />
-                        <RowDefinition Height="45" />
+                        <RowDefinition Height="60" />
                         <RowDefinition Height="15" />
-                        <RowDefinition Height="45" />
+                        <RowDefinition Height="60" />
                         <RowDefinition Height="{Binding iRowHeightKeys}" />
                         <RowDefinition Height="{Binding iRowHeightKeys}" />
                         <RowDefinition Height="{Binding iRowHeightEncryptedDirectory}" />
                         <RowDefinition Height="15" />
                         <RowDefinition Height="{Binding iRowHeightEncrypted}" />
                         <RowDefinition Height="35" />
-                        <RowDefinition Height="45" />
+                        <RowDefinition Height="60" />
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
@@ -83,10 +83,10 @@
                     <vm:DragDropTextBox Grid.Row="4" Grid.Column="1" Text="{Binding sDestinationFileOrDirectory, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" AllowedFileExtensions="{Binding asAllowedFileExtensions, Mode=OneWay}" Height="28" VerticalContentAlignment="Center" Margin="0" />
                     <Button Grid.Row="4" Grid.Column="2" Content="{Binding sSelect}" Height="28" Command="{Binding dcSelectDestination}" Margin="10,0,0,0" />
 
-                    <Label Grid.Row="5" Grid.Column="0" Content="{Binding sAuthenticationKey}" HorizontalAlignment="Left" Margin="0,9,0,0" Visibility="{Binding VisibleWhenEncrypted}" />
+                    <Label Grid.Row="5" Grid.Column="0" Content="{Binding sAuthenticationKey}" HorizontalAlignment="Left" Margin="0,16,0,0" Visibility="{Binding VisibleWhenEncrypted}" />
                     <ComboBox Grid.Row="5" Grid.Column="1" Height="28" ItemsSource="{Binding blAuthenticationKeys}" SelectedItem="{Binding SelectedAuthenticationKey}" Padding="8,5,3,3" Margin="0,1,0,0" Visibility="{Binding VisibleWhenEncrypted}" IsEnabled="{Binding isEditKeys}" />
 
-                    <Label Grid.Row="6" Grid.Column="0" Content="{Binding sEncryptionKey}" HorizontalAlignment="Left" Margin="0,9,0,0" Visibility="{Binding VisibleWhenEncrypted}" />
+                    <Label Grid.Row="6" Grid.Column="0" Content="{Binding sEncryptionKey}" HorizontalAlignment="Left" Margin="0,16,0,0" Visibility="{Binding VisibleWhenEncrypted}" />
                     <ComboBox Grid.Row="6" Grid.Column="1" Height="28" ItemsSource="{Binding blEncryptionKeys}" SelectedItem="{Binding SelectedEncryptionKey}" Padding="8,5,3,3" Margin="0,1,0,0" Visibility="{Binding VisibleWhenEncrypted}" IsEnabled="{Binding isEditKeys}" />
 
                     <Label Grid.Row="7" Grid.Column="0" Content="{Binding sMaximumBlockCount}" HorizontalAlignment="Left" Margin="0,9,0,0" Visibility="{Binding VisibleWhenDestinationDirectoryIsSymmetric}" />
@@ -99,12 +99,7 @@
                         <Label DockPanel.Dock="Right" Content="{Binding sReserve}" Margin="20,9,0,0" Visibility="Collapsed" />
                         <Label Content="{Binding sCapacityInformation}" Margin="20,9,0,0" />
                     </DockPanel>
-                    
-                    <!--
-                    <Label Grid.Row="7" Grid.Column="2" Content="{Binding sIterations}" HorizontalAlignment="Right" Margin="0,4,10,5" Visibility="Collapsed" />
-                    <TextBox Grid.Row="7" Grid.Column="3" Text="" Height="28" Margin="10,0,10,0" Visibility="Collapsed" />
-                    -->
-                    
+
                     <Label Grid.Row="9" Grid.Column="0" Content="{Binding sUseWorkingMemory}" HorizontalAlignment="Left" Margin="0,9,0,0" Visibility="{Binding VisibleWhenEncrypted}" />
                     <DockPanel Grid.Row="9" Grid.Column="1" Visibility="{Binding VisibleWhenEncrypted}" >
                         <ComboBox  DockPanel.Dock="Left" Height="28" Width="85" ItemsSource="{Binding blMemoryLimits}" SelectedItem="{Binding SelectedWorkingMemoryLimit}" HorizontalContentAlignment="Right" Padding="8,5,3,3" Margin="0,1,15,0" IsEnabled="True" />
