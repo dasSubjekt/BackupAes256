@@ -21,7 +21,7 @@ namespace BackupAes256.Model
         private readonly TextConverter _TextConverter;
         private Thread _AsyncThread;
         private readonly CryptoServices _Cryptography;
-        private readonly ConcurrentQueue<BackgroundMessage> _quCommandQueue, _quReturn;
+        private readonly ConcurrentQueue<BackgroundMessage> _quCommands, _quReturn;
 
 
         #region constructors
@@ -33,7 +33,7 @@ namespace BackupAes256.Model
             _Cryptography = Cryptography;
             _abCopyBuffer = new byte[PairOfFiles.ciBytesPerProgressUnit];
             _TextConverter = new TextConverter();
-            _quCommandQueue = new ConcurrentQueue<BackgroundMessage>();
+            _quCommands = new ConcurrentQueue<BackgroundMessage>();
             _quReturn = new ConcurrentQueue<BackgroundMessage>();
             Reset();
         }
@@ -42,7 +42,7 @@ namespace BackupAes256.Model
         #region properties
 
         /// <summary></summary>
-        public ConcurrentQueue<BackgroundMessage> ReturnQueue
+        public ConcurrentQueue<BackgroundMessage> quReturn
         {
             get { return _quReturn; }
         }
@@ -66,7 +66,7 @@ namespace BackupAes256.Model
         /// <summary></summary>
         private void AsynchronousThreadMethod()
         {
-            while (_quCommandQueue.TryDequeue(out BackgroundMessage UserInterfaceMessage))
+            while (_quCommands.TryDequeue(out BackgroundMessage UserInterfaceMessage))
             {
                 switch (UserInterfaceMessage.eType)
                 {
@@ -378,7 +378,7 @@ namespace BackupAes256.Model
         /// <param name=""></param>
         public void Enqueue(BackgroundMessage BackgroundMessage)
         {
-            _quCommandQueue.Enqueue(BackgroundMessage);
+            _quCommands.Enqueue(BackgroundMessage);
         }
 
 
@@ -530,7 +530,7 @@ namespace BackupAes256.Model
             _quReturn.Enqueue(new BackgroundMessage(BackgroundMessage.nType.UserMessage, BackgroundMessage.nReturnCode.StartFillKey));
             _Cryptography.FillKey(UserInterfaceMessage.KeyProperty);
             _quReturn.Enqueue(new BackgroundMessage(BackgroundMessage.nType.UserMessage, BackgroundMessage.nReturnCode.FinishFillKey));
-            ReturnQueue.Enqueue(UserInterfaceMessage);            
+            _quReturn.Enqueue(UserInterfaceMessage);            
         }
 
         /// <summary></summary>
@@ -728,8 +728,8 @@ namespace BackupAes256.Model
         private void Reset()
         {
 #pragma warning disable IDE0059   // Suppres warnings that the value assigned to variable is never used
-            if (!_quCommandQueue.IsEmpty)
-                while (_quCommandQueue.TryDequeue(out BackgroundMessage MessageToDiscard)) ;
+            if (!_quCommands.IsEmpty)
+                while (_quCommands.TryDequeue(out BackgroundMessage MessageToDiscard)) ;
 
             if (!_quReturn.IsEmpty)
                 while (_quReturn.TryDequeue(out BackgroundMessage MessageToDiscard)) ;
@@ -751,7 +751,7 @@ namespace BackupAes256.Model
         /// <summary></summary>
         public bool Start()
         {
-            if ((_eState != nState.Idle) || _quCommandQueue.IsEmpty)
+            if ((_eState != nState.Idle) || _quCommands.IsEmpty)
             {
                 return false;
             }
@@ -772,7 +772,7 @@ namespace BackupAes256.Model
         /// <param name=""></param>
         public bool Start(BackgroundMessage BackgroundMessage)
         {
-            _quCommandQueue.Enqueue(BackgroundMessage);
+            _quCommands.Enqueue(BackgroundMessage);
             return Start();
         }
         #endregion

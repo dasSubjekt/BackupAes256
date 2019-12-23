@@ -1217,9 +1217,9 @@
             bool isListOfPairsChanged = false;
             bool isProgressChanged = false;
 
-            while (!_BackgroundThread.ReturnQueue.IsEmpty)
+            while (!_BackgroundThread.quReturn.IsEmpty)
             {
-                _BackgroundThread.ReturnQueue.TryDequeue(out BackgroundMessage BackgroundMessage);
+                _BackgroundThread.quReturn.TryDequeue(out BackgroundMessage BackgroundMessage);
 
                 if (BackgroundMessage != null)
                 {
