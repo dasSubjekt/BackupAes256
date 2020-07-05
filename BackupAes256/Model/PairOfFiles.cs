@@ -213,36 +213,6 @@
             set { _uAttributesSource = value; }
         }
 
-        /// <summary></summary>
-        private long kBytesToEncryptDestination
-        {
-            get
-            {
-                long kReturn = ciMinimumAttributesLength + abRelativePathBytes.Length;
-                if (_isDirectory)
-                    return kReturn;
-                else if (_kDestinationSize < 0)
-                    throw new ArgumentException("kBytesToEncryptDestination must not be < 0.");
-                else
-                    return kReturn + ciExtraFileAttributesLength + _kDestinationSize;
-            }
-        }
-
-        /// <summary></summary>
-        public long kBytesToEncryptSource
-        {
-            get
-            {
-                long kReturn = ciMinimumAttributesLength + abRelativePathBytes.Length;
-                if (_isDirectory)
-                    return kReturn;
-                else if (_kSourceSize < 0)
-                    throw new ArgumentException("kBytesToEncryptSource must not be < 0.");
-                else
-                    return kReturn + ciExtraFileAttributesLength + _kSourceSize;
-            }
-        }
-
         /// <summary>Comparison result determining the type of synchronization that needs to be performed on this <c>PairOfFiles</c>.</summary>
         public nComparison eComparison
         {
@@ -272,12 +242,6 @@
         public Drive DestinationDrive
         {
             get { return _DestinationDrive; }
-        }
-
-        /// <summary></summary>
-        public Stream DestinationEncryptionStream
-        {
-            get { return _DestinationDrive?.EncryptionStream; }
         }
 
         /// <summary></summary>

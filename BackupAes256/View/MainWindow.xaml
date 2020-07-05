@@ -4,27 +4,27 @@
         xmlns:vm="clr-namespace:BackupAes256.ViewModel"
         vm:ViewModelBase.IsClosing="{Binding dcIsClosing}"
         Title="{Binding sWindowTitle}" Height="800" Width="1200" Icon="/BackupAes256;component/Assets/Chest.ico" >
-    <Window.DataContext><vm:MainViewModel/></Window.DataContext>
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
     <Window.InputBindings>
         <KeyBinding Command="{Binding dcF5}" Key="F5"/>
     </Window.InputBindings>
-    <Window.Resources>
-        <vm:ValueTranslator x:Key="ValueTranslator" />
-    </Window.Resources>
     <Grid Margin="0,15,8,8">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="589*" />
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0" Grid.Column="0" LastChildFill="True" >
+        <DockPanel Grid.Row="0" Grid.Column="0" LastChildFill="True" Grid.ColumnSpan="2" >
             <Button DockPanel.Dock="Right" Content="{Binding sClose}" Command="{Binding dcClose}" Margin="11,0,0,0" Width="100" Height="28" />
             <ProgressBar DockPanel.Dock="Right" IsIndeterminate="{Binding isProgressBarIndeterminate}" Value="{Binding iProgressBarValue}" Maximum="{Binding iProgressBarMaximum}" Width="250" Height="22" Margin="20,0,0,0"/>
             <Label Content="{Binding sStatus}" Margin="15,3,0,0" />
         </DockPanel>
-        <TabControl Grid.Row="1" Grid.Column="0" SelectedIndex="{Binding iMenuTab}" Padding="0" TabStripPlacement="Left" Margin="0,10,0,0">
+        <TabControl Grid.Row="1" Grid.Column="0" SelectedIndex="{Binding iMenuTab}" Padding="0" TabStripPlacement="Left" Margin="0,10,0,0" Grid.ColumnSpan="2">
             <vm:DragDropTabItem Padding="10,15,10,10" Header="{Binding sTask}" IsDragOver="{Binding isDragOverTasks, Mode=TwoWay}" >
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
@@ -36,7 +36,7 @@
                 </TabItem.HeaderTemplate>
                 <Grid Margin="15,20,5,5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="185" />
+                        <ColumnDefinition Width="140" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="105" />
                     </Grid.ColumnDefinitions>
@@ -56,57 +56,13 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0" Grid.Column="0" Content="{Binding sTask}" FontWeight="Bold" Margin="0,4,0,5" Visibility="Collapsed" />
-                    <Grid Grid.Row="0" Grid.Column="1" Visibility="Collapsed">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="115" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="105" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="35" />
-                        </Grid.RowDefinitions>
-                        <ComboBox Grid.Row="0" Grid.Column="0" Height="28" ItemsSource="{Binding blTasks}" SelectedItem="{Binding SelectedTask}" Padding="8,5,3,3" Margin="0,6,0,0" />
-                        <Label Grid.Row="0" Grid.Column="1" Content="{Binding sTaskNameText}" HorizontalAlignment="Right" Margin="0,7,10,0" />
-                        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding sTaskName}" Height="28" VerticalContentAlignment="Center" Margin="0,6,0,0" />
-                        <Label Grid.Row="0" Grid.Column="3" Content="{Binding sOnDrive}" HorizontalAlignment="Right" Margin="0,7,10,0" />
-                    </Grid>
-                    <ComboBox Grid.Row="0" Grid.Column="2" Height="28" ItemsSource="{Binding blDrives}" SelectedItem="{Binding SelectedDrive}" Padding="8,5,3,3" Margin="0,6,0,0" Visibility="Collapsed" />
-                    <Button Grid.Row="0" Grid.Column="4" Content="{Binding sSave}" Height="28" Command="{Binding dcSaveTask}" Margin="15,3,10,4" Visibility="Collapsed" />
-
-                    <ComboBox Grid.Row="2" Grid.Column="0" Height="28" ItemsSource="{Binding blSourceOptions}" SelectedItem="{Binding SelectedSourceOption}" Padding="8,6,3,2" Margin="0,0,10,0" />
-                    <vm:DragDropTextBox Grid.Row="2" Grid.Column="1" Text="{Binding sSourceFileOrDirectory, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" AllowedFileExtensions="{Binding asAllowedFileExtensions, Mode=OneWay}" Height="28" VerticalContentAlignment="Center" Margin="0" />
+                    <Label Grid.Row="2" Grid.Column="0" Content="{Binding sSourceDirectoryText}" HorizontalAlignment="Left" Margin="0,17,10,0" />
+                    <vm:DragDropTextBox Grid.Row="2" Grid.Column="1" Text="{Binding sSourceDirectory, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" AllowedFileExtensions="{Binding asAllowedFileExtensions, Mode=OneWay}" Height="28" VerticalContentAlignment="Center" Margin="0" />
                     <Button Grid.Row="2" Grid.Column="2" Content="{Binding sSelect}" Height="28" Command="{Binding dcSelectSource}" Margin="10,0,0,0" />
 
-                    <ComboBox Grid.Row="4" Grid.Column="0" Height="28" ItemsSource="{Binding blDestinationOptions}" SelectedItem="{Binding SelectedDestinationOption}" Padding="8,6,3,2" Margin="0,0,10,0" />
-                    <vm:DragDropTextBox Grid.Row="4" Grid.Column="1" Text="{Binding sDestinationFileOrDirectory, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" AllowedFileExtensions="{Binding asAllowedFileExtensions, Mode=OneWay}" Height="28" VerticalContentAlignment="Center" Margin="0" />
+                    <Label Grid.Row="4" Grid.Column="0" Content="{Binding sDestinationDirectoryText}" HorizontalAlignment="Left" Margin="0,17,10,0" />
+                    <vm:DragDropTextBox Grid.Row="4" Grid.Column="1" Text="{Binding sDestinationDirectory, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" AllowedFileExtensions="{Binding asAllowedFileExtensions, Mode=OneWay}" Height="28" VerticalContentAlignment="Center" Margin="0" />
                     <Button Grid.Row="4" Grid.Column="2" Content="{Binding sSelect}" Height="28" Command="{Binding dcSelectDestination}" Margin="10,0,0,0" />
-
-                    <Label Grid.Row="5" Grid.Column="0" Content="{Binding sAuthenticationKey}" HorizontalAlignment="Left" Margin="0,16,0,0" Visibility="{Binding VisibleWhenEncrypted}" />
-                    <ComboBox Grid.Row="5" Grid.Column="1" Height="28" ItemsSource="{Binding blAuthenticationKeys}" SelectedItem="{Binding SelectedAuthenticationKey}" Padding="8,5,3,3" Margin="0,1,0,0" Visibility="{Binding VisibleWhenEncrypted}" IsEnabled="{Binding isEditKeys}" />
-
-                    <Label Grid.Row="6" Grid.Column="0" Content="{Binding sEncryptionKey}" HorizontalAlignment="Left" Margin="0,16,0,0" Visibility="{Binding VisibleWhenEncrypted}" />
-                    <ComboBox Grid.Row="6" Grid.Column="1" Height="28" ItemsSource="{Binding blEncryptionKeys}" SelectedItem="{Binding SelectedEncryptionKey}" Padding="8,5,3,3" Margin="0,1,0,0" Visibility="{Binding VisibleWhenEncrypted}" IsEnabled="{Binding isEditKeys}" />
-
-                    <Label Grid.Row="7" Grid.Column="0" Content="{Binding sMaximumBlockCount}" HorizontalAlignment="Left" Margin="0,9,0,0" Visibility="{Binding VisibleWhenDestinationDirectoryIsSymmetric}" />
-                    <DockPanel Grid.Row="7" Grid.Column="1" LastChildFill="True" Visibility="{Binding VisibleWhenDestinationDirectoryIsSymmetric}" >
-                        <ComboBox DockPanel.Dock="Left" Height="28" Width="135" ItemsSource="{Binding blFileSystemLevels}" SelectedItem="{Binding SelectedFileSystemLevel}" HorizontalContentAlignment="Right" Padding="8,5,3,3" Margin="0,1,0,0" IsEnabled="{Binding isEditKeys}" />
-                        <Label DockPanel.Dock="Left" Content="{Binding sBlockSize}" HorizontalAlignment="Left" Margin="30,9,0,0" />
-                        <ComboBox DockPanel.Dock="Left" Height="28" Width="75" ItemsSource="{Binding blBlockSizes}" SelectedItem="{Binding SelectedBlockSize}" HorizontalContentAlignment="Right" Padding="8,5,3,3" Margin="8,1,0,0" IsEnabled="{Binding isEditKeys}" />
-                        <Label DockPanel.Dock="Right" Content="{Binding sBlocks}" Margin="8,4,0,0" Visibility="Collapsed" />
-                        <TextBox DockPanel.Dock="Right" Text="" Height="28" Width="80" Margin="8,0,0,0" Visibility="Collapsed" />
-                        <Label DockPanel.Dock="Right" Content="{Binding sReserve}" Margin="20,9,0,0" Visibility="Collapsed" />
-                        <Label Content="{Binding sCapacityInformation}" Margin="20,9,0,0" />
-                    </DockPanel>
-
-                    <Label Grid.Row="9" Grid.Column="0" Content="{Binding sUseWorkingMemory}" HorizontalAlignment="Left" Margin="0,9,0,0" Visibility="{Binding VisibleWhenEncrypted}" />
-                    <DockPanel Grid.Row="9" Grid.Column="1" Visibility="{Binding VisibleWhenEncrypted}" >
-                        <ComboBox  DockPanel.Dock="Left" Height="28" Width="85" ItemsSource="{Binding blMemoryLimits}" SelectedItem="{Binding SelectedWorkingMemoryLimit}" HorizontalContentAlignment="Right" Padding="8,5,3,3" Margin="0,1,15,0" IsEnabled="True" />
-                        <Label DockPanel.Dock="Left" Content="{Binding sTemporaryDirectoryText}" HorizontalAlignment="Left" Margin="15,9,15,0" />
-                        <vm:DragDropTextBox Text="{Binding sTemporaryDirectory}" Height="28" VerticalContentAlignment="Center" Margin="0" />
-                    </DockPanel>
-                    <Button Grid.Row="9" Grid.Column="2" Content="{Binding sSelect}" Height="28" Command="{Binding dcSelectTemporary}" Margin="10,0,0,0" Visibility="{Binding VisibleWhenEncrypted}" />
 
                     <Button Grid.Row="11" Grid.Column="1" Content="{Binding sSwap}" Command="{Binding dcSwap}" HorizontalAlignment="Right" Height="28" Width="95" Margin="10,0,0,0"/>
                     <Button Grid.Row="11" Grid.Column="2" Content="{Binding sCompare}" Command="{Binding dcCompare}" Height="28" Margin="10,0,0,0" />
@@ -131,10 +87,10 @@
                         <RowDefinition Height="35" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <DockPanel Grid.Row="0" Grid.Column="0" LastChildFill="True" Visibility="{Binding VisibleWhenDestinationIsDirectory}" >
+                    <DockPanel Grid.Row="0" Grid.Column="0" LastChildFill="True" >
                         <RadioButton DockPanel.Dock="Left" Content="{Binding sModeWithDelete}" IsChecked="{Binding isModeWithDelete}" Margin="15,15,0,0" />
                         <RadioButton DockPanel.Dock="Left" Content="{Binding sModeNoDelete}" IsChecked="{Binding isModeNoDelete}" Margin="25,15,0,0" />
-                        <RadioButton DockPanel.Dock="Left" Content="{Binding sModeTwoWay}" IsChecked="{Binding isModeTwoWay}" IsEnabled="{Binding isSourceADirectory}" Margin="25,15,0,0" />
+                        <RadioButton DockPanel.Dock="Left" Content="{Binding sModeTwoWay}" IsChecked="{Binding isModeTwoWay}" Margin="25,15,0,0" />
                         <Label Content="{Binding sModeInformation}" HorizontalAlignment="Left" Margin="50,10,10,0" />
                     </DockPanel>
 
@@ -225,6 +181,7 @@
                     </ListView>
                 </Grid>
             </TabItem>
+            <!--
             <TabItem Padding="10,15,10,10" Header="{Binding sKeys}" >
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
@@ -241,77 +198,13 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition />
-                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="45" />
-                        <RowDefinition Height="45" />
-                        <RowDefinition Height="45" />
-                        <RowDefinition Height="0" />
-                        <RowDefinition Height="0" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="35" />
-                        <RowDefinition Height="20" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <ListView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding blKeys}" SelectedItem="{Binding SelectedKey}" SelectionMode="Single" >
-                        <ListView.View>
-                            <GridView AllowsColumnReorder="false" >
-                                <GridViewColumn DisplayMemberBinding="{Binding sName}" Header="{Binding sKeyNameText}" Width="280" />
-                                <GridViewColumn Header="{Binding sTypeText}" >
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding Path=eType, Converter={StaticResource ValueTranslator}}" TextAlignment="Right" Width="100" Padding="0,0,10,0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="{Binding sBitsText}" >
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding sBits}" TextAlignment="Right" Width="55" Padding="0,0,12,0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="{Binding sFormatText}" >
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding Path=eFormat, Converter={StaticResource ValueTranslator}}" TextAlignment="Left" Width="75" Padding="15,0,0,0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="{Binding sDriveText}" >
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding sDrive}" TextAlignment="Left" Width="90" Padding="20,0,0,0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-
-                    <Label Grid.Row="2" Grid.Column="0" Content="{Binding sKeyNameText}" Margin="0,9,0,0" />
-                    <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True" >
-                        <Button DockPanel.Dock="Right" Width="90" Content="{Binding sExport}" Height="28" Command="{Binding dcExportKey}" Margin="10,1,10,0" />
-                        <Button DockPanel.Dock="Right" Width="90" Content="{Binding sSave}" Height="28" Command="{Binding dcSaveKey}" Margin="10,1,10,0" />
-                        <ComboBox DockPanel.Dock="Right" Width="105" Height="28" ItemsSource="{Binding blDrives}" SelectedItem="{Binding SelectedKeyDrive}" Padding="8,5,3,3" Margin="0,1,10,0" IsEnabled="{Binding isKeyDrivesEnabled}" />
-                        <Label DockPanel.Dock="Right" Content="{Binding sOnDrive}" Margin="10,9,10,0" />
-                        <Label DockPanel.Dock="Right" Width="70" Content="{Binding sKeyFormat}" Margin="5,9,15,0" />
-                        <Label DockPanel.Dock="Right" Content="{Binding sFormatText}" Margin="15,9,5,0" />
-                        <TextBox Text="{Binding sKeyName, UpdateSourceTrigger=PropertyChanged}" Height="28" VerticalContentAlignment="Center" Margin="0,0,15,0" IsReadOnly="{Binding isKeyNameReadOnly}" />
-                    </DockPanel>
-
-                    <ComboBox Grid.Row="3" Grid.Column="0" Height="28" Width="155" ItemsSource="{Binding blKeyNumerals}" SelectedItem="{Binding SelectedKeyNumeral}" HorizontalAlignment="Left" Padding="8,5,3,3" Margin="0,1,0,0" IsEnabled="{Binding isSelectedKeyFormatEnabled}" />
-                    <TextBox Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Text="{Binding sKeyValue, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" vm:FocusExtension.IsFocused="{Binding isKeyValueFocused}" Margin="0,0,10,0" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" IsReadOnly="{Binding isKeyValueReadOnly}" />
-
-                    <ComboBox Grid.Row="4" Grid.Column="0" Height="28" Width="155" ItemsSource="{Binding blKeyParametersAsymmetric}" SelectedItem="{Binding SelectedKeyParameterAsymmetric}" HorizontalAlignment="Left" Padding="8,5,3,3" Margin="0,1,0,0" IsEnabled="{Binding isKeyParametersEnabled}" Visibility="{Binding VisibleWhenKeyAsymmetric}" />
-
-                    <DockPanel Grid.Row="8" Grid.Column="1" LastChildFill="False">
-                        <Button DockPanel.Dock="Left" Content="{Binding sReadDrives}" Height="28" Width="135" Command="{Binding dcReadDrivesAndKeys}" Margin="0,1,0,0" />
-                        <Label DockPanel.Dock="Left" Content="{Binding sNewKey}" HorizontalAlignment="Left" Margin="40,4,5,0" />
-                        <ComboBox DockPanel.Dock="Left" Height="28" Width="225" ItemsSource="{Binding blNewKeyTypes}" SelectedItem="{Binding SelectedNewKeyType}" Padding="10,5,3,3" Margin="0,1,0,0" />
-                        <Button DockPanel.Dock="Left" Content="{Binding sCreateOrCancel}" Height="28" Width="90" Command="{Binding dcNewKey}" Margin="20,1,0,0" />
-                    </DockPanel>
-                    
+                   
                 </Grid>
             </TabItem>
+            -->
         </TabControl>
     </Grid>
 </Window>

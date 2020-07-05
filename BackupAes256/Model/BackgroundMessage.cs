@@ -6,15 +6,14 @@ namespace BackupAes256.Model
     /// <summary>A data structure for exchanging information with <c>BackgroundThread</c>.</summary>
     public class BackgroundMessage
     {
-        public enum nReturnCode { AesAuthenticated, AuthenticationAndDecryptionSuccessful, NoAsymmetricKey, DecryptionSuccessful, Empty, FileNotFound, FinishCompare, FinishDecryption, FinishEncryption, FinishFillKey, FoundPrivateKey, FoundAuthenticationKey, FoundSymmetricKey, NoAuthenticationKey, NoSymmetricKey, ParsingSuccessful, ProgrammingError, RsaAuthenticated, StartCompare, StartDecryption, StartEncryption, StartFillKey, UnspecifiedError, UnspecifiedSuccess, WrongFileFormat };
-        public enum nType { Cancelled, Compare, DecryptFile, DecryptIndex, EncryptAttributes, EncryptFile, EncryptionIndexCount, FillKey, FinishEncryption, NewPair, ReportProgress, SetupProgress, StartDecryption, StartEncryption, Status, Stop, Synchronize, UserMessage };
+        public enum nReturnCode { AesAuthenticated, Empty, FileNotFound, FinishCompare, ParsingSuccessful, ProgrammingError, StartCompare, UnspecifiedError, WrongFileFormat };
+        public enum nType { Cancelled, Compare, NewPair, ReportProgress, SetupProgress, Status, Stop, Synchronize, UserMessage };
 
         private readonly nReturnCode _eReturnCode;
         private nType _eType;
         private int _iProgressMaximum, _iValue;
         private string _sText;
         private readonly DateTime _TimeStamp;
-        private readonly CryptoKey _KeyProperty;
         private readonly Drive _DriveProperty;
         private PairOfFiles _PairProperty;
 
@@ -30,17 +29,8 @@ namespace BackupAes256.Model
             _iValue = _iProgressMaximum = 0;
             _sText = string.Empty;
             _TimeStamp = DateTime.MinValue;
-            _KeyProperty = null;
             _DriveProperty = null;
             _PairProperty = null;
-        }
-
-        /// <summary>A constructor to initialize a <c>new BackgroundMessage</c>.</summary>
-        /// <param name=""></param>
-        /// <param name=""></param>
-        public BackgroundMessage(nType eType, CryptoKey KeyProperty) : this(eType)
-        {
-            _KeyProperty = KeyProperty;
         }
 
         /// <summary>A constructor to initialize a <c>new BackgroundMessage</c>.</summary>
@@ -114,21 +104,6 @@ namespace BackupAes256.Model
         #region properties
 
         /// <summary></summary>
-        public bool isDestinationEncrypted
-        {
-            get
-            {
-                return (_PairProperty != null) && (_PairProperty.DestinationDrive != null) && (_PairProperty.DestinationDrive.eEncryptionType != Drive.nEncryptionType.DirectoryUnencrypted);
-            }
-        }
-
-        /// <summary></summary>
-        public CryptoKey KeyProperty
-        {
-            get { return _KeyProperty; }
-        }
-
-        /// <summary></summary>
         public Drive DriveProperty
         {
             get { return _DriveProperty; }
@@ -151,15 +126,6 @@ namespace BackupAes256.Model
         public nReturnCode eReturnCode
         {
             get { return _eReturnCode; }
-        }
-
-        /// <summary></summary>
-        public bool isSourceEncrypted
-        {
-            get
-            {
-                return (_PairProperty != null) && (_PairProperty.SourceDrive != null) && (_PairProperty.SourceDrive.eEncryptionType != Drive.nEncryptionType.DirectoryUnencrypted);
-            }
         }
 
         /// <summary></summary>

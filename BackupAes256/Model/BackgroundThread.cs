@@ -71,14 +71,6 @@ namespace BackupAes256.Model
                 switch (UserInterfaceMessage.eType)
                 {
                     case BackgroundMessage.nType.Compare: ExecuteCompare(UserInterfaceMessage); break;
-                    case BackgroundMessage.nType.DecryptFile: ExecuteDecryptFile(UserInterfaceMessage); break;
-                    case BackgroundMessage.nType.DecryptIndex: ExecuteDecryptIndex(UserInterfaceMessage); break;
-                    case BackgroundMessage.nType.EncryptAttributes: ExecuteEncryptAttributes(UserInterfaceMessage); break;
-                    case BackgroundMessage.nType.EncryptFile: ExecuteEncryptFile(UserInterfaceMessage); break;
-                    case BackgroundMessage.nType.EncryptionIndexCount: ExecuteEncryptionIndexCount(UserInterfaceMessage); break;
-                    case BackgroundMessage.nType.FillKey: ExecuteFillKey(UserInterfaceMessage); break;
-                    case BackgroundMessage.nType.FinishEncryption: ExecuteFinishEncryption(UserInterfaceMessage); break;
-                    case BackgroundMessage.nType.StartEncryption: ExecuteStartEncryption(UserInterfaceMessage); break;
                     case BackgroundMessage.nType.Synchronize: ExecuteSynchronize(UserInterfaceMessage); break;
                     default: throw new NotImplementedException("command not implemented: " + UserInterfaceMessage.eType.ToString());
                 }
@@ -139,9 +131,6 @@ namespace BackupAes256.Model
             else
             {
                 throw new NotImplementedException("File system encryption is not yet implemented.");
-                // PairToCopy.CopyProperties();
-                // PairToCopy.eComparison = PairOfFiles.nComparison.Identical;
-                // PairToCopy.DestinationDrive.AddPair(PairToCopy);
             }
         }
 
@@ -169,11 +158,6 @@ namespace BackupAes256.Model
                             using (FileStream DestinationStream = new FileStream(PairToCopy.sDestinationPath, FileMode.Create, FileAccess.Write))
                                 CopyWithProgress(SourceStream, DestinationStream);
                         }
-                    }
-                    else
-                    {
-                        using (FileStream DestinationStream = new FileStream(PairToCopy.sDestinationPath, FileMode.Create, FileAccess.Write))
-                            CopyWithProgress(PairToCopy.SourceDrive.DecryptionStream, DestinationStream, PairToCopy.kSourceSize);
                     }
                 }
                 catch (Exception ex)
@@ -356,24 +340,6 @@ namespace BackupAes256.Model
             RequestCancel();
         }
 
-
-        /// <summary></summary>
-        /// <param name=""></param>
-        private void Encrypt(PairOfFiles PairToCopy)
-        {
-            if (!PairToCopy.isDirectory)
-            {
-                if (PairToCopy.DestinationDrive.eEncryptionType == Drive.nEncryptionType.DirectorySymmetric)
-                {
-                    PairToCopy.CopyProperties();
-                    using (FileStream SourceStream = new FileStream(PairToCopy.sSourcePath, FileMode.Open, FileAccess.Read))
-                        PairToCopy.DestinationDrive.EncryptToFileSystem(SourceStream, PairToCopy.kSourceSize, _quReturn);
-                    PairToCopy.eComparison = PairOfFiles.nComparison.Identical;
-                }
-            }
-        }
-
-
         /// <summary></summary>
         /// <param name=""></param>
         public void Enqueue(BackgroundMessage BackgroundMessage)
@@ -395,8 +361,6 @@ namespace BackupAes256.Model
             switch (SourceDrive.eEncryptionType)
             {
                 case Drive.nEncryptionType.DirectoryUnencrypted: ReadSourceDirectories(UserInterfaceMessage.PairProperty, ltKnownPairs); break;
-                case Drive.nEncryptionType.FileAsymmetric:
-                case Drive.nEncryptionType.FileSymmetric: SourceDrive.ReadEncryptedIndex(UserInterfaceMessage.PairProperty, ltKnownPairs, _quReturn); break;
             }
 
             switch (UserInterfaceMessage.PairProperty.DestinationDrive.eEncryptionType)
@@ -423,155 +387,9 @@ namespace BackupAes256.Model
 
         /// <summary></summary>
         /// <param name=""></param>
-        private void ExecuteDecryptFile(BackgroundMessage UserInterfaceMessage)
-        {
-            PairOfFiles[] PairsToWrite;
-
-            _quReturn.Enqueue(new BackgroundMessage(BackgroundMessage.nType.UserMessage, BackgroundMessage.nReturnCode.StartDecryption));
-
-            PairsToWrite = UserInterfaceMessage.PairProperty.SourceDrive.ReadEncryptedIndex(UserInterfaceMessage.PairProperty, _quReturn);
-
-            if (PairsToWrite != null)
-            {
-                for (int i = 0; i < PairsToWrite.Length; i++)
-                {
-                    PairsToWrite[i].eComparison = PairOfFiles.nComparison.SourceOnly;
-                    Copy(PairsToWrite[i]);
-                }
-            }
-            UserInterfaceMessage.PairProperty.SourceDrive.DisposeEncryption();
-            _quReturn.Enqueue(new BackgroundMessage(BackgroundMessage.nType.UserMessage, BackgroundMessage.nReturnCode.FinishDecryption));
-        }
-
-
-        /// <summary></summary>
-        /// <param name=""></param>
-        private void ExecuteDecryptIndex(BackgroundMessage UserInterfaceMessage)
-        {
-            // if (UserInterfaceMessage.PairProperty.SourceDrive != null)
-            //     _Cryptography.DecryptIndex(true, UserInterfaceMessage);
-            // 
-            // if (UserInterfaceMessage.PairProperty.DestinationDrive != null)
-            //     _Cryptography.DecryptIndex(false, UserInterfaceMessage);
-        }
-
-        /// <summary></summary>
-        /// <param name=""></param>
-        private void ExecuteEncryptAttributes(BackgroundMessage UserInterfaceMessage)
-        {
-            if (UserInterfaceMessage.PairProperty != null)
-                UserInterfaceMessage.PairProperty.WriteSourceAttributes(UserInterfaceMessage.PairProperty.DestinationDrive.EncryptionStream);
-        }
-
-        /// <summary></summary>
-        /// <param name=""></param>
-        private void ExecuteEncryptFile(BackgroundMessage UserInterfaceMessage)
-        {
-            PairOfFiles PairToEncrypt = UserInterfaceMessage.PairProperty;
-
-            if (PairToEncrypt != null)
-            {
-                try
-                {
-                    if (!PairToEncrypt.isDirectory)
-                    {
-                        using (FileStream SourceStream = new FileStream(PairToEncrypt.sSourcePath, FileMode.Open, FileAccess.Read))
-                            CopyWithProgress(SourceStream, PairToEncrypt.DestinationEncryptionStream);
-                    }
-
-                    if (_eState == nState.Working)
-                    {
-                        PairToEncrypt.CopyProperties();
-                        PairToEncrypt.eComparison = PairOfFiles.nComparison.Identical;
-                    }
-                    else
-                    {
-                        PairToEncrypt.eComparison = PairOfFiles.nComparison.Error;
-                        PairToEncrypt.sErrorMessage = "Das Kopieren der Datei wurde vom Benutzer abgebrochen.";
-                    }
-                }
-                catch (Exception ex)
-                {
-                    PairToEncrypt.eComparison = PairOfFiles.nComparison.Error;
-                    PairToEncrypt.sErrorMessage = ex.Message;
-                }
-            }
-        }
-
-        /// <summary></summary>
-        /// <param name=""></param>
-        private void ExecuteEncryptionIndexCount(BackgroundMessage UserInterfaceMessage)
-        {
-            if (UserInterfaceMessage.DriveProperty != null)
-                UserInterfaceMessage.DriveProperty.EncryptionStream.Write(BitConverter.GetBytes(UserInterfaceMessage.iValue), 0, 4);
-        }
-
-        // /// <summary></summary>
-        // /// <param name=""></param>
-        // private void ExecuteEncrypt(BackgroundMessage UserInterfaceMessage)
-        // {
-        //     UserInterfaceMessage.eType = BackgroundMessage.nType.Status;
-        //     _quReturn.Enqueue(UserInterfaceMessage);
-        // 
-        //     switch (UserInterfaceMessage.PairProperty.eComparison)
-        //     {
-        //         case PairOfFiles.nComparison.SourceOnly:
-        //         case PairOfFiles.nComparison.SourceNewer: Encrypt(UserInterfaceMessage.PairProperty); break;
-        //         case PairOfFiles.nComparison.DestinationOnly:
-        //         case PairOfFiles.nComparison.DestinationNewer:
-        //         case PairOfFiles.nComparison.Identical: throw new NotImplementedException("This type of encryption has not yet been implemented.");
-        //     }
-        // }
-
-        /// <summary></summary>
-        /// <param name=""></param>
-        private void ExecuteFillKey(BackgroundMessage UserInterfaceMessage)
-        {
-            _quReturn.Enqueue(new BackgroundMessage(BackgroundMessage.nType.UserMessage, BackgroundMessage.nReturnCode.StartFillKey));
-            _Cryptography.FillKey(UserInterfaceMessage.KeyProperty);
-            _quReturn.Enqueue(new BackgroundMessage(BackgroundMessage.nType.UserMessage, BackgroundMessage.nReturnCode.FinishFillKey));
-            _quReturn.Enqueue(UserInterfaceMessage);            
-        }
-
-        /// <summary></summary>
-        /// <param name=""></param>
-        private void ExecuteFinishEncryption(BackgroundMessage UserInterfaceMessage)
-        {
-            if (UserInterfaceMessage.PairProperty.DestinationDrive != null)
-            {
-                switch (UserInterfaceMessage.PairProperty.DestinationDrive.eEncryptionType)
-                {
-                    case Drive.nEncryptionType.DirectorySymmetric: UserInterfaceMessage.PairProperty.DestinationDrive.CloseFileSystem(); break;
-                    case Drive.nEncryptionType.FileAsymmetric: UserInterfaceMessage.PairProperty.DestinationDrive.CloseHybridFile(_quReturn); break;
-                    case Drive.nEncryptionType.FileSymmetric: UserInterfaceMessage.PairProperty.DestinationDrive.CloseSymmetricFile(_quReturn); break;
-                }
-            }
-            _quReturn.Enqueue(new BackgroundMessage(BackgroundMessage.nType.UserMessage, BackgroundMessage.nReturnCode.FinishEncryption));
-        }
-
-        /// <summary></summary>
-        /// <param name=""></param>
-        private void ExecuteStartEncryption(BackgroundMessage UserInterfaceMessage)
-        {
-            _quReturn.Enqueue(new BackgroundMessage(BackgroundMessage.nType.UserMessage, BackgroundMessage.nReturnCode.StartEncryption));
-
-            if (UserInterfaceMessage.DriveProperty != null)
-            {
-                switch (UserInterfaceMessage.DriveProperty.eEncryptionType)
-                {
-                    case Drive.nEncryptionType.DirectorySymmetric: UserInterfaceMessage.DriveProperty.SetupFileSystem(); break;
-                    case Drive.nEncryptionType.FileAsymmetric: UserInterfaceMessage.DriveProperty.CreateHybridFile(UserInterfaceMessage.iValue); break;
-                    case Drive.nEncryptionType.FileSymmetric: UserInterfaceMessage.DriveProperty.CreateSymmetricFile(UserInterfaceMessage.iValue); break;
-                }
-            }            
-        }
-
-
-        /// <summary></summary>
-        /// <param name=""></param>
         private void ExecuteSynchronize(BackgroundMessage UserInterfaceMessage)
         {
-            if ((!UserInterfaceMessage.isSourceEncrypted) && (!UserInterfaceMessage.isDestinationEncrypted) && (UserInterfaceMessage.PairProperty.eComparison != PairOfFiles.nComparison.Identical))
+            if (UserInterfaceMessage.PairProperty.eComparison != PairOfFiles.nComparison.Identical)
             {
                 UserInterfaceMessage.eType = BackgroundMessage.nType.Status;
                 _quReturn.Enqueue(UserInterfaceMessage);

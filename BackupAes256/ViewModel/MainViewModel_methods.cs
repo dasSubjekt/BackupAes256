@@ -6,12 +6,10 @@
     using System.Windows;
     using System.Reflection;
     using BackupAes256.Model;
-    using System.Windows.Data;
     using System.Windows.Input;
     using System.ComponentModel;
     using System.Windows.Threading;
     using System.Collections.Generic;
-    using System.Windows.Media.Imaging;
 
 
     public partial class MainViewModel : ViewModelBase
@@ -23,7 +21,6 @@
         {
 #if ENGLISH
             _dyTranslations.Add("AesKey", "256-bit AES key");
-            _dyTranslations.Add("AuthenticationAndDecryptionSuccessful", "File »{0:s}« was decrypted successfully.");
             _dyTranslations.Add("AuthenticationKey", "authentication key");
             _dyTranslations.Add("BitsText", "bits");
             _dyTranslations.Add("Blocks", "blocks");
@@ -43,26 +40,20 @@
             _dyTranslations.Add("DestinationDateText", "destination date");
             _dyTranslations.Add("DestinationDirectoryMissing", "The destination directory does not exist.");
             _dyTranslations.Add("DestinationDirectorySymmetric", "destination directory  (" + Drive.csSymmetricFileExtension + ")");
-            _dyTranslations.Add("DestinationDirectoryUnencrypted", "destination directory");
+            _dyTranslations.Add("DestinationDirectoryText", "destination directory");
             _dyTranslations.Add("DestinationFile", "destination file");
-            _dyTranslations.Add("DestinationFileAsymmetric", "destination file  (" + Drive.csAsymmetricFileExtension + ")");
-            _dyTranslations.Add("DestinationFileSymmetric", "destination file  (" + Drive.csSymmetricFileExtension + ")");
             _dyTranslations.Add("DestinationNewer", "destination newer");
             _dyTranslations.Add("DestinationOnly", "destination only");
             _dyTranslations.Add("DestinationSizeText", "destination size");
             _dyTranslations.Add("DriveText", "drive");
             _dyTranslations.Add("EmptyDriveName", "not saved");
-            _dyTranslations.Add("Encrypted", "encrypted");
             _dyTranslations.Add("ErrorDirectoriesIdentical", "Identical or nested directories cannot be synchronized.");
             _dyTranslations.Add("ErrorFilesIdentical", "Identical files cannot be synchronized.");
             _dyTranslations.Add("ErrorMessageText", "error message");
-            _dyTranslations.Add("ErrorWorkingMemoryLimit", "Encrypting several gigabyte of data is not (yet) possible.");
             _dyTranslations.Add("Export", "export");
             _dyTranslations.Add("Failure", "failure");
             _dyTranslations.Add("FileNotFound", "File »{0:s}« was not found.");
             _dyTranslations.Add("FinishCompare", "Comparison of the directories was finished.");
-            _dyTranslations.Add("FinishDecryption", "Decryption of the file was finished.");
-            _dyTranslations.Add("FinishEncryption", "Encryption of the file was finished.");
             _dyTranslations.Add("FinishFillKey", "Creation of a key was finished.");
             _dyTranslations.Add("FormatText", "format");
             _dyTranslations.Add("FoundAuthenticationKey", "The name of the authentication key is »{0:s}«.");
@@ -80,29 +71,11 @@
             _dyTranslations.Add("KeyNumerals64", "value (Base64)");
             _dyTranslations.Add("KeyInvalid", "The value for the 256-bit key is invalid.");
             _dyTranslations.Add("KeyNameText", "key name");
-            _dyTranslations.Add("KeyParameterD", "decryption exponent d");
-            _dyTranslations.Add("KeyParameterDP", "dp = d mod (p - 1)");
-            _dyTranslations.Add("KeyParameterDQ", "dq = d mod (q - 1)");
-            _dyTranslations.Add("KeyParameterEmail", "Email address");
-            _dyTranslations.Add("KeyParameterExponent", "public exponent e");
-            _dyTranslations.Add("KeyParameterHomePage", "home page");
-            _dyTranslations.Add("KeyParameterInverseQ", "invq = (1 / q) mod p");
-            _dyTranslations.Add("KeyParameterModulus", "modulus = p * q");
-            _dyTranslations.Add("KeyParameterOwner", "owner");
-            _dyTranslations.Add("KeyParameterP", "prime factor p");
-            _dyTranslations.Add("KeyParameterQ", "prime factor q");
             _dyTranslations.Add("KeyParameterSymmetric", "symmetric key");
             _dyTranslations.Add("Keys", "keys");
             _dyTranslations.Add("KeyTextPublic", "public");
             _dyTranslations.Add("KeyTooLong", "The value for the 256-bit key is too long.");
             _dyTranslations.Add("KeyTooShort", "The value for the 256-bit key is too short.");
-            _dyTranslations.Add("KeyTypeAsymmetric4096Bit", "asymmetric, 4096 bits");
-            _dyTranslations.Add("KeyTypeAsymmetric7680Bit", "asymmetric, 7680 bits (~AES-192)");
-            _dyTranslations.Add("KeyTypeAsymmetric8192Bit", "asymmetric, 8192 bits");
-            _dyTranslations.Add("KeyTypeAsymmetric15360Bit", "asymmetric, 15360 bits (~AES-256)");
-            _dyTranslations.Add("KeyTypeAsymmetric16384Bit", "asymmetric, 16384 bits");
-            _dyTranslations.Add("KeyTypeAsymmetricPrivate", "asymmetric");
-            _dyTranslations.Add("KeyTypeAsymmetricPublic", "asymmetric");
             _dyTranslations.Add("KeyTypeInvalid", "invalid");
             _dyTranslations.Add("KeyTypeSymmetric", "symmetric");
             _dyTranslations.Add("KeyTypeSymmetric256Bit", "symmetric, 256 bits");
@@ -113,19 +86,17 @@
             _dyTranslations.Add("ModeTwoWay", "two-way");
             _dyTranslations.Add("ModeWithDelete", "with delete");
             _dyTranslations.Add("NewKey", "new key");
-            _dyTranslations.Add("NoAsymmetricKey", "No private RSA key was found to match these data.");
             _dyTranslations.Add("NoAuthenticationKey", "No authentication key was found to match these data.");
             _dyTranslations.Add("NoSymmetricKey", "No symmetric key was found to match these data.");
             _dyTranslations.Add("OnDrive", "save on drive");
             _dyTranslations.Add("PleaseCheck", "please check");
             _dyTranslations.Add("ProgrammingError", "A programming error occurred. I am sorry, this should not have happened.");
-            _dyTranslations.Add("ProgramVersion", "Program version " + sProgramVersion + " of 10/12/2019 is ready.");
+            _dyTranslations.Add("ProgramVersion", "Program version " + sProgramVersion + " of 05/07/2020 is ready.");
             _dyTranslations.Add("Progress", "progress");
             _dyTranslations.Add("ReadDrivesAndKeys", "re-read drives");
             _dyTranslations.Add("RelativePathText", "relative path");
             _dyTranslations.Add("ReplacedFromSource", "replaced with the older version from the source directory");
             _dyTranslations.Add("Reserve", "reserve");
-            _dyTranslations.Add("RsaKey", "public RSA key");
             _dyTranslations.Add("Save", "save");
             _dyTranslations.Add("Select", "select");
             _dyTranslations.Add("SelectDestinationDirectory", "select destination directory");
@@ -138,17 +109,13 @@
             _dyTranslations.Add("SourceDateText", "source date");
             _dyTranslations.Add("SourceDirectoryMissing", "The source directory does not exist.");
             _dyTranslations.Add("SourceDirectorySymmetric", "source directory  (" + Drive.csSymmetricFileExtension + ")");
-            _dyTranslations.Add("SourceDirectoryUnencrypted", "source directory");
+            _dyTranslations.Add("SourceDirectoryText", "source directory");
             _dyTranslations.Add("SourceFile", "source file");
-            _dyTranslations.Add("SourceFileAsymmetric", "source file  (" + Drive.csAsymmetricFileExtension + ")");
             _dyTranslations.Add("SourceFileMissing", "The source file does not exist.");
-            _dyTranslations.Add("SourceFileSymmetric", "source file  (" + Drive.csSymmetricFileExtension + ")");
             _dyTranslations.Add("SourceSizeText", "source size");
             _dyTranslations.Add("SourceNewer", "source newer");
             _dyTranslations.Add("SourceOnly", "source only");
             _dyTranslations.Add("StartCompare", "Comparison of the directories was started.");
-            _dyTranslations.Add("StartDecryption", "Decryption of the file was started.");
-            _dyTranslations.Add("StartEncryption", "Encryption of the file was started.");
             _dyTranslations.Add("StartFillKey", "Creation of a key was started.");
             _dyTranslations.Add("Swap", "swap");
             _dyTranslations.Add("Synchronize", "synchronize");
@@ -161,12 +128,11 @@
             _dyTranslations.Add("UseWorkingMemory", "use working memory up to");
             _dyTranslations.Add("WillBe", "will be ");
             _dyTranslations.Add("WillBeSkipped", "will be skipped");
-            _dyTranslations.Add("WindowTitle", "Backup and file synchronization with symmetric and hybrid encryption");
+            _dyTranslations.Add("WindowTitle", "Backup and file synchronization");
             _dyTranslations.Add("WrongFileFormat", "File »{0:s}« has a wrong format and could not be read.");
 
 #elif DEUTSCH
             _dyTranslations.Add("AesKey", "256-Bit AES-Schlüssel");
-            _dyTranslations.Add("AuthenticationAndDecryptionSuccessful", "Die Datei »{0:s}« wurde erfolgreich entschlüsselt.");
             _dyTranslations.Add("AuthenticationKey", "Authentifizierungs-Schlüssel");
             _dyTranslations.Add("BitsText", "Bit");
             _dyTranslations.Add("Blocks", "Blöcke");
@@ -186,16 +152,13 @@
             _dyTranslations.Add("DestinationDateText", "Datum Ziel");
             _dyTranslations.Add("DestinationDirectoryMissing", "Das Zielvereichnis existiert nicht.");
             _dyTranslations.Add("DestinationDirectorySymmetric", "Zielverzeichnis  (" + Drive.csSymmetricFileExtension + ")");
-            _dyTranslations.Add("DestinationDirectoryUnencrypted", "Zielverzeichnis");
+            _dyTranslations.Add("DestinationDirectoryText", "Zielverzeichnis");
             _dyTranslations.Add("DestinationFile", "Zieldatei");
-            _dyTranslations.Add("DestinationFileAsymmetric", "Zieldatei  (" + Drive.csAsymmetricFileExtension + ")");
-            _dyTranslations.Add("DestinationFileSymmetric", "Zieldatei  (" + Drive.csSymmetricFileExtension + ")");
             _dyTranslations.Add("DestinationNewer", "neueres Ziel");
             _dyTranslations.Add("DestinationOnly", "nur Ziel");
             _dyTranslations.Add("DestinationSizeText", "Größe Ziel");
             _dyTranslations.Add("DriveText", "Laufwerk");
             _dyTranslations.Add("EmptyDriveName", "ungespeichert");
-            _dyTranslations.Add("Encrypted", "verschlüsselt");
             _dyTranslations.Add("ErrorDirectoriesIdentical", "Identische oder in einander enthaltene Verzeichnisse können nicht synchronisiert werden.");
             _dyTranslations.Add("ErrorFilesIdentical", "Identische Dateien können nicht synchronisiert werden.");
             _dyTranslations.Add("ErrorMessageText", "Fehlernachricht");
@@ -204,8 +167,6 @@
             _dyTranslations.Add("Failure", "fehlerhaft");
             _dyTranslations.Add("FileNotFound", "Die Datei »{0:s}« wurde nicht gefunden.");
             _dyTranslations.Add("FinishCompare", "Der Vergleich der Verzeichnisse wurde beendet.");
-            _dyTranslations.Add("FinishDecryption", "Das Entschlüsseln der Datei wurde beendet.");
-            _dyTranslations.Add("FinishEncryption", "Das Verschlüsseln der Datei wurde beendet.");
             _dyTranslations.Add("FinishFillKey", "Das Erzeugen eines Schlüssels wurde beendet.");
             _dyTranslations.Add("FormatText", "Format");
             _dyTranslations.Add("FoundAuthenticationKey", "Der Name des Authentifizierungs-Schlüssels ist »{0:s}«.");
@@ -223,29 +184,11 @@
             _dyTranslations.Add("KeyNumerals64", "Wert (Base64)");
             _dyTranslations.Add("KeyInvalid", "Der Wert für den 256-Bit-Schlüssel ist ungültig.");
             _dyTranslations.Add("KeyNameText", "Schlüsselname");
-            _dyTranslations.Add("KeyParameterD", "Entschlüsselungsexp. d");
-            _dyTranslations.Add("KeyParameterDP", "dp = d mod (p - 1)");
-            _dyTranslations.Add("KeyParameterDQ", "dq = d mod (q - 1)");
-            _dyTranslations.Add("KeyParameterEmail", "E-Mail-Adresse");
-            _dyTranslations.Add("KeyParameterExponent", "öffentlicher Exponent e");
-            _dyTranslations.Add("KeyParameterHomePage", "Homepage");
-            _dyTranslations.Add("KeyParameterInverseQ", "invq = (1 / q) mod p");
-            _dyTranslations.Add("KeyParameterModulus", "Modul = p * q");
-            _dyTranslations.Add("KeyParameterOwner", "Besitzer");
-            _dyTranslations.Add("KeyParameterP", "Primfaktor p");
-            _dyTranslations.Add("KeyParameterQ", "Primfaktor q");
             _dyTranslations.Add("KeyParameterSymmetric", "symmetrischer Schlüssel");
             _dyTranslations.Add("Keys", "Schlüssel");
             _dyTranslations.Add("KeyTextPublic", "öffentlich");
             _dyTranslations.Add("KeyTooLong", "Der Wert für den 256-Bit-Schlüssel ist zu lang.");
             _dyTranslations.Add("KeyTooShort", "Der Wert für den 256-Bit-Schlüssel ist zu kurz.");
-            _dyTranslations.Add("KeyTypeAsymmetric4096Bit", "asymmetrisch, 4096 Bit");
-            _dyTranslations.Add("KeyTypeAsymmetric7680Bit", "asymmetrisch, 7680 Bit (~AES-192)");
-            _dyTranslations.Add("KeyTypeAsymmetric8192Bit", "asymmetrisch, 8192 Bit");
-            _dyTranslations.Add("KeyTypeAsymmetric15360Bit", "asymmetrisch, 15360 Bit (~AES-256)");
-            _dyTranslations.Add("KeyTypeAsymmetric16384Bit", "asymmetrisch, 16384 Bit");
-            _dyTranslations.Add("KeyTypeAsymmetricPrivate", "asymmetrisch");
-            _dyTranslations.Add("KeyTypeAsymmetricPublic", "asymmetrisch");
             _dyTranslations.Add("KeyTypeInvalid", "ungültig");
             _dyTranslations.Add("KeyTypeSymmetric", "symmetrisch");
             _dyTranslations.Add("KeyTypeSymmetric256Bit", "symmetrisch, 256 Bit");
@@ -256,19 +199,17 @@
             _dyTranslations.Add("ModeTwoWay", "gegenseitig");
             _dyTranslations.Add("ModeWithDelete", "mit Löschen");
             _dyTranslations.Add("NewKey", "neuen Schlüssel");
-            _dyTranslations.Add("NoAsymmetricKey", "Zu diesen Daten wurde kein privater RSA-Schlüssel gefunden.");
             _dyTranslations.Add("NoAuthenticationKey", "Zu diesen Daten wurde kein Authentifizierungs-Schlüssel gefunden.");
             _dyTranslations.Add("NoSymmetricKey", "Zu diesen Daten wurde kein symmetrischer Schlüssel gefunden.");
             _dyTranslations.Add("OnDrive", "auf Laufwerk");
             _dyTranslations.Add("PleaseCheck", "bitte überprüfen");
             _dyTranslations.Add("ProgrammingError", "Ein Programmierfehler ist aufgetreten. Entschuldigung, das hätte nicht passieren dürfen.");
-            _dyTranslations.Add("ProgramVersion", "Die Programmversion " + sProgramVersion + " vom 10.12.2019 ist bereit.");
+            _dyTranslations.Add("ProgramVersion", "Die Programmversion " + sProgramVersion + " vom 05.07.2020 ist bereit.");
             _dyTranslations.Add("Progress", "Fortschritt");
             _dyTranslations.Add("ReadDrivesAndKeys", "Laufwerke neu lesen");
             _dyTranslations.Add("RelativePathText", "Relativer Pfad");
             _dyTranslations.Add("ReplacedFromSource", "durch die ältere Version aus dem Quellverzeichnis ersetzt");
             _dyTranslations.Add("Reserve", "reserviere");
-            _dyTranslations.Add("RsaKey", "öffentlicher RSA-Schlüssel");
             _dyTranslations.Add("Save", "speichern");
             _dyTranslations.Add("Select", "auswählen");
             _dyTranslations.Add("SelectDestinationDirectory", "Zielverzeichnis wählen");
@@ -281,17 +222,13 @@
             _dyTranslations.Add("SourceDateText", "Datum Quelle");
             _dyTranslations.Add("SourceDirectoryMissing", "Das Quellvereichnis existiert nicht.");
             _dyTranslations.Add("SourceDirectorySymmetric", "Quellverzeichnis  (" + Drive.csSymmetricFileExtension + ")");
-            _dyTranslations.Add("SourceDirectoryUnencrypted", "Quellverzeichnis");
+            _dyTranslations.Add("SourceDirectoryText", "Quellverzeichnis");
             _dyTranslations.Add("SourceFile", "Quelldatei");
-            _dyTranslations.Add("SourceFileAsymmetric", "Quelldatei  (" + Drive.csAsymmetricFileExtension + ")");
             _dyTranslations.Add("SourceFileMissing", "Die Quelldatei existiert nicht.");
-            _dyTranslations.Add("SourceFileSymmetric", "Quelldatei  (" + Drive.csSymmetricFileExtension + ")");
             _dyTranslations.Add("SourceSizeText", "Größe Quelle");
             _dyTranslations.Add("SourceNewer", "neuere Quelle");
             _dyTranslations.Add("SourceOnly", "nur Quelle");
             _dyTranslations.Add("StartCompare", "Der Vergleich der Verzeichnisse wurde gestartet.");
-            _dyTranslations.Add("StartDecryption", "Das Entschlüsseln der Datei wurde gestartet.");
-            _dyTranslations.Add("StartEncryption", "Das Verschlüsseln der Datei wurde gestartet.");
             _dyTranslations.Add("StartFillKey", "Das Erzeugen eines Schlüssels wurde gestartet.");
             _dyTranslations.Add("Swap", "tauschen");
             _dyTranslations.Add("Synchronize", "synchronisieren");
@@ -304,30 +241,24 @@
             _dyTranslations.Add("UseWorkingMemory", "Arbeitsspeicher nutzen bis");
             _dyTranslations.Add("WillBe", "werden ");
             _dyTranslations.Add("WillBeSkipped", "werden übersprungen");
-            _dyTranslations.Add("WindowTitle", "Sicherungskopien und Dateisynchronisierung mit symmetrischer und hybrider Verschlüsselung");
+            _dyTranslations.Add("WindowTitle", "Sicherungskopien und Dateisynchronisierung");
             _dyTranslations.Add("WrongFileFormat", "Die Datei »{0:s}« hat ein falsches Format und kann nicht gelesen werden.");
 #endif
             _dyTranslations.Add("HiddenKey", "●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●");
 
 
-            _sBackgroundStatus = _sDestinationFileOrDirectory = _sKeyValue = _sSourceFileOrDirectory = _sTaskName = string.Empty;
+            _sBackgroundStatus = _sDestinationDirectory = _sSourceDirectory = _sTaskName = string.Empty;
             _eBackgroundTask = BackgroundMessage.nType.Stop;
             _eSynchronizationMode = PairOfFiles.nSynchronizationMode.WithDelete;
             _ltDrives = new List<Drive>();
-            _ltKeys = new List<CryptoKey>();
             _ltPairs = new List<PairOfFiles>();
-            _blAsymmetricKeys = new BindingList<CryptoKey>();
-            _blKeys = new BindingList<CryptoKey>();
-            _blPrivateKeys = new BindingList<CryptoKey>();
-            _blSymmetricKeys = new BindingList<CryptoKey>();
             _blPairs = new BindingList<PairOfFiles>();
             _Cryptography = new CryptoServices();
-            _DestinationDrive = new Drive(_Cryptography, _ltKeys, false);
-            _SourceDrive = new Drive(_Cryptography, _ltKeys, true);
+            _DestinationDrive = new Drive(_Cryptography, false);
+            _SourceDrive = new Drive(_Cryptography, true);
             _BackgroundThread = new BackgroundThread(_Cryptography);
             _eMenuTab = nMenuTab.Task;
             _eCaseTab = PairOfFiles.nComparison.SourceOnly;
-            _SelectedKey = _SelectedKeyFileAesKey = null;
 
             _aiPairsCount = new int[(int)PairOfFiles.nComparison.Error + 1];
             for (int i = 0; i < _aiPairsCount.Length; i++)
@@ -341,148 +272,28 @@
             _aiPairsOrder[4] = 1;
             _aiPairsOrder[5] = 0;
 
-            _blDrives = new BindingList<Drive>();
-            _SelectedKeyDrive = null;
-
-            _blBlockSizes = new BindingList<Property>
-            {
-                new Property(12, 0x001000, "4 KB  "),
-                new Property(13, 0x002000, "8 KB  "),
-                new Property(14, 0x004000, "16 KB  "),
-                new Property(15, 0x008000, "32 KB  "),
-                new Property(16, 0x010000, "64 KB  "),
-                new Property(17, 0x020000, "128 KB  "),
-                new Property(18, 0x040000, "256 KB  "),
-                new Property(19, 0x080000, "512 KB  "),
-                new Property(20, 0x100000, "1 MB  "),
-                new Property(21, 0x200000, "2 MB  "),
-                new Property(22, 0x400000, "4 MB  ")
-            };
-
-            _blDestinationOptions = new BindingList<Property>
-            {
-                new Property((int)Drive.nEncryptionType.FileAsymmetric, 0, Translate("DestinationFileAsymmetric")),
-                new Property((int)Drive.nEncryptionType.FileSymmetric, 0, Translate("DestinationFileSymmetric")),
-                // new Property((int)Drive.nEncryptionType.DirectorySymmetric, 0, Translate("DestinationDirectorySymmetric")),
-                new Property((int)Drive.nEncryptionType.DirectoryUnencrypted, 0, Translate("DestinationDirectoryUnencrypted"))
-            };
-
-            _blFileSystemLevels = new BindingList<Property>
-            {
-                new Property(3, 3, "46 656  (3)  "),
-                new Property(4, 4, "1 679 616  (4)  "),
-                new Property(5, 5, "60 466 176  (5)  "),
-                new Property(6, 6, "2 176 782 336  (6)  ")
-            };
-
-            _blKeyNumeralsPrivate = new BindingList<Property>
-            {
-                new Property(0, 0, Translate("KeyNumerals0")),
-                new Property(2, 2, Translate("KeyNumerals2")),
-                new Property(10, 10, Translate("KeyNumerals10")),
-                new Property(16, 16, Translate("KeyNumerals16")),
-                new Property(64, 64, Translate("KeyNumerals64")),
-            };
-
-            _blKeyNumeralsPublic = new BindingList<Property>
-            {
-                new Property(2, 2, Translate("KeyNumerals2")),
-                new Property(10, 10, Translate("KeyNumerals10")),
-                new Property(16, 16, Translate("KeyNumerals16")),
-                new Property(64, 64, Translate("KeyNumerals64")),
-            };
-
-            _blKeyTextPublic = new BindingList<Property>
-            {
-                new Property(1, 1, Translate("KeyTextPublic")),
-            };
-            _blKeyNumerals = null;
-            _iSelectedKeyNumeral = 1;
-
-            _blKeyParametersAsymmetric = new BindingList<Property>
-            {
-                new Property((int)CryptoKey.nKeyParameter.D, 0, Translate("KeyParameterD")),
-                new Property((int)CryptoKey.nKeyParameter.DP, 0, Translate("KeyParameterDP")),
-                new Property((int)CryptoKey.nKeyParameter.DQ, 0, Translate("KeyParameterDQ")),
-                new Property((int)CryptoKey.nKeyParameter.Exponent, 0, Translate("KeyParameterExponent")),
-                new Property((int)CryptoKey.nKeyParameter.InverseQ, 0, Translate("KeyParameterInverseQ")),
-                new Property((int)CryptoKey.nKeyParameter.Modulus, 0, Translate("KeyParameterModulus")),
-                new Property((int)CryptoKey.nKeyParameter.P, 0, Translate("KeyParameterP")),
-                new Property((int)CryptoKey.nKeyParameter.Q, 0, Translate("KeyParameterQ")),
-                new Property((int)CryptoKey.nKeyParameter.Owner, 0, Translate("KeyParameterOwner")),
-                new Property((int)CryptoKey.nKeyParameter.Email, 0, Translate("KeyParameterEmail")),
-                new Property((int)CryptoKey.nKeyParameter.Homepage, 0, Translate("KeyParameterHomePage"))
-            };
-            _eSelectedKeyParameterAsymmetric = CryptoKey.nKeyParameter.Modulus;
-            _iKeyNumeralIfCanHide = 0;
-
-            _blMemoryLimits = new BindingList<Property>
-            {
-                new Property(1, 1048576, "1 MB  "),
-                new Property(5, 5242880, "5 MB  "),
-                new Property(10, 10485760, "10 MB  "),
-                new Property(50, 52428800, "50 MB  "),
-                new Property(100, 104857600, "100 MB  "),
-                new Property(500, 524288000, "500 MB  "),
-                new Property(1000, 1048576000, "1000 MB  "),
-                new Property(1500, 1572864000, "1500 MB  "),
-                new Property(2000, 2097152000, "2000 MB  ")
-            };
-
             _blMessages = new BindingList<Property>
             {
                 new Property(DateTime.Now, Translate("ProgramVersion"))
             };
 
-            _blNewKeyTypes = new BindingList<Property>
-            {
-                new Property(32, (int)CryptoKey.nKeyType.Symmetric, Translate("KeyTypeSymmetric256Bit")),
-                new Property(512, (int)CryptoKey.nKeyType.AsymmetricPrivate, Translate("KeyTypeAsymmetric4096Bit")),
-                new Property(960, (int)CryptoKey.nKeyType.AsymmetricPrivate, Translate("KeyTypeAsymmetric7680Bit")),
-                new Property(1024, (int)CryptoKey.nKeyType.AsymmetricPrivate, Translate("KeyTypeAsymmetric8192Bit")),
-                new Property(1920, (int)CryptoKey.nKeyType.AsymmetricPrivate, Translate("KeyTypeAsymmetric15360Bit")),
-                new Property(2048, (int)CryptoKey.nKeyType.AsymmetricPrivate, Translate("KeyTypeAsymmetric16384Bit"))
-            };
-            _iSelectedNewKeyBytes = 32;
-
-            _blSourceOptions = new BindingList<Property>
-            {
-                new Property((int)Drive.nEncryptionType.FileAsymmetric, 0, Translate("SourceFileAsymmetric")),
-                new Property((int)Drive.nEncryptionType.FileSymmetric, 0, Translate("SourceFileSymmetric")),
-                // new Property((int)Drive.nEncryptionType.DirectorySymmetric, 0, Translate("SourceDirectorySymmetric")),
-                new Property((int)Drive.nEncryptionType.DirectoryUnencrypted, 0, Translate("SourceDirectoryUnencrypted"))
-            };
-
-            _blTasks = new BindingList<Property>();
             _SelectedTask = null;
-            _isDragOverTasks = _isKeyValueFocused = _isProgressBarIndeterminate = false;
+            _isDragOverTasks = _isProgressBarIndeterminate = false;
             _iProgressBarValue = 0;
             _iProgressBarMaximum = ciProgrssBarDefaultMaximum;
-            _iWorkingMemoryLimit = Drive.ciDefaultWorkingMemoryLimit;
             _UserInterfaceTimer = new DispatcherTimer();
             _UserInterfaceTimer.Tick += new EventHandler(UserInterfaceTimerTick);
             _UserInterfaceTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
 
             _sApplicationDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             sTemporaryDirectory = Path.GetTempPath();
-            _IconKeys = LoadBitmap("Letter.png");
-            _IconMessages = LoadBitmap("News.png");
-            _IconProgress = LoadBitmap("Ship.png");
-            _IconTask = LoadBitmap("Bottle.png");
 
             ExecuteReadDrivesAndKeys();
-            _ViewSourceKeys = CollectionViewSource.GetDefaultView(_blKeys);
 
             dcCompare = new DelegateCommand(ExecuteCompare, CanExecuteCompare);
-            dcExportKey = new DelegateCommand(ExecuteExportKey, CanExecuteExportKey);
             dcF5 = new DelegateCommand(ExecuteF5, CanExecuteF5);
-            dcNewKey = new DelegateCommand(ExecuteNewKey, CanExecuteNewKey);
-            dcReadDrivesAndKeys = new DelegateCommand(ExecuteReadDrivesAndKeys);
-            dcSaveKey = new DelegateCommand(ExecuteSaveKey, CanExecuteSaveKey);
-            dcSaveTask = new DelegateCommand(ExecuteSaveTask);
             dcSelectDestination = new DelegateCommand(ExecuteSelectDestination);
             dcSelectSource = new DelegateCommand(ExecuteSelectSource);
-            dcSelectTemporary = new DelegateCommand(ExecuteSelectTemporary);
             dcSwap = new DelegateCommand(ExecuteSwap, CanExecuteSwap);
             dcSynchronizeCancelOrRecompare = new DelegateCommand(ExecuteSynchronizeCancelOrRecompare, CanExecuteSynchronizeCancelOrRecompare);
         }
@@ -490,38 +301,16 @@
 
         #region commands and methods
 
-        private void AddKey(CryptoKey Key)
-        {
-            // if ((Key.eType == CryptoKey.nKeyType.AsymmetricPrivate) && (_ltKeys.Contains(Key)))
-            //     _ltKeys.Remove(Key);
-
-            if (!_ltKeys.Contains(Key))
-                _ltKeys.Add(Key);
-        }
-
         private Property BackgroundMessageToProperty(BackgroundMessage Message)
         {
             string sMessageText = string.Empty;
 
             switch (Message.eReturnCode)
             {
-                case BackgroundMessage.nReturnCode.AuthenticationAndDecryptionSuccessful: sMessageText = string.Format(sAuthenticationAndDecryptionSuccessful, Message.sText); break;
                 case BackgroundMessage.nReturnCode.FileNotFound: sMessageText = string.Format(sFileNotFound, Message.sText); break;
                 case BackgroundMessage.nReturnCode.FinishCompare: sMessageText = sFinishCompare; break;
-                case BackgroundMessage.nReturnCode.FinishDecryption: sMessageText = sFinishDecryption; break;
-                case BackgroundMessage.nReturnCode.FinishEncryption: sMessageText = sFinishEncryption; break;
-                case BackgroundMessage.nReturnCode.FinishFillKey: sMessageText = sFinishFillKey; break;
-                case BackgroundMessage.nReturnCode.FoundAuthenticationKey: sMessageText = string.Format(sFoundAuthenticationKey, Message.sText); break;
-                case BackgroundMessage.nReturnCode.FoundPrivateKey: sMessageText = string.Format(sFoundPrivateKey, Message.sText); break;
-                case BackgroundMessage.nReturnCode.FoundSymmetricKey: sMessageText = string.Format(sFoundSymmetricKey, Message.sText); break;
-                case BackgroundMessage.nReturnCode.NoAsymmetricKey: sMessageText = sNoAsymmetricKey; break;
-                case BackgroundMessage.nReturnCode.NoAuthenticationKey: sMessageText = sNoAuthenticationKey; break;
-                case BackgroundMessage.nReturnCode.NoSymmetricKey: sMessageText = sNoSymmetricKey; break;
                 case BackgroundMessage.nReturnCode.ProgrammingError: sMessageText = sProgrammingError; break;
                 case BackgroundMessage.nReturnCode.StartCompare: sMessageText = sStartCompare; break;
-                case BackgroundMessage.nReturnCode.StartDecryption: sMessageText = sStartDecryption; break;
-                case BackgroundMessage.nReturnCode.StartEncryption: sMessageText = sStartEncryption; break;
-                case BackgroundMessage.nReturnCode.StartFillKey: sMessageText = sStartFillKey; break;
                 case BackgroundMessage.nReturnCode.UnspecifiedError: sMessageText = sUnspecifiedError; break;
                 case BackgroundMessage.nReturnCode.WrongFileFormat: sMessageText = string.Format(sWrongFileFormat, Message.sText); break;
             }
@@ -532,12 +321,6 @@
         private bool CanExecuteCompare()
         {
             return isExecuteCompare;
-        }
-
-        /// <summary></summary>
-        protected bool CanExecuteExportKey()
-        {
-            return isExecuteExportKey;
         }
 
         /// <summary></summary>
@@ -585,27 +368,6 @@
             }
         }
 
-        /// <summary>Delegate method invoked by dcExportKey.</summary>
-        private void ExecuteExportKey()
-        {
-            if (isExecuteExportKey)
-            {
-                CryptoKey KeyToSave = new CryptoKey(_SelectedKey.sName, CryptoKey.nKeyFormat.Public, CryptoKey.nKeyType.AsymmetricPublic, _SelectedKey.iBytes)
-                {
-                    sOwner = _SelectedKey.sOwner,
-                    sEmail = _SelectedKey.sEmail,
-                    sHomepage = _SelectedKey.sHomepage,
-                    abRsaExponent = _SelectedKey.abRsaExponent,   // Passing these by reference would be a problem if the user could change asymmetric key values.
-                    abRsaModulus = _SelectedKey.abRsaModulus      // Editing one key would then simultaneously and illogically change the other key.
-                };
-                KeyToSave.Save(_SelectedKeyDrive);
-                AddKey(KeyToSave);
-                SelectedKey = null;
-                RequeryDisplayedKeys();
-                SelectedKey = KeyToSave;
-            }
-        }
-
         /// <summary>Delegate method invoked by dcF5.</summary>
         private void ExecuteF5()
         {
@@ -615,109 +377,24 @@
             }
         }
 
-        /// <summary>Delegate method invoked by dcNewKey.</summary>
-        private void ExecuteNewKey()
-        {
-            CryptoKey NewKey;
-            int iNameCounter = 1;
-            string sNewKeyName;
-
-            if (isExecuteNewKey)
-            {
-                if (_eBackgroundTask == BackgroundMessage.nType.Stop)
-                {
-                    if (_iSelectedNewKeyBytes == CryptoServices.ciAesKeyBytesLength)
-                    {
-                        sNewKeyName = Translate("KeyTypeSymmetric");
-                        while (_ltKeys.SingleOrDefault(key => key.sName == sNewKeyName) != null)
-                        {
-                            sNewKeyName = Translate("KeyTypeSymmetric") + " " + iNameCounter.ToString();
-                            iNameCounter++;
-                        }
-                        NewKey = new CryptoKey(sNewKeyName, CryptoKey.nKeyFormat.KeePass, CryptoKey.nKeyType.Symmetric, _iSelectedNewKeyBytes);
-                    }
-                    else
-                    {
-                        sNewKeyName = Translate("KeyTypeAsymmetricPrivate");
-                        while (_ltKeys.SingleOrDefault(key => key.sName == sNewKeyName) != null)
-                        {
-                            sNewKeyName = Translate("KeyTypeAsymmetricPrivate") + " " + iNameCounter.ToString();
-                            iNameCounter++;
-                        }
-                        NewKey = new CryptoKey(sNewKeyName, CryptoKey.nKeyFormat.Private, CryptoKey.nKeyType.AsymmetricPrivate, _iSelectedNewKeyBytes);
-                    }
-
-                    _BackgroundThread.Enqueue(new BackgroundMessage(BackgroundMessage.nType.FillKey, NewKey));
-                    if (_BackgroundThread.Start())
-                    {
-                        _eBackgroundTask = BackgroundMessage.nType.FillKey;
-                        sBackgroundStatus = Translate("CreatingNewKey");
-                        isProgressBarIndeterminate = true;
-                        _UserInterfaceTimer.Start();
-                    }
-                }
-                else if (_eBackgroundTask == BackgroundMessage.nType.FillKey)   // the user clicked cancel
-                {
-                    if (_UserInterfaceTimer.IsEnabled)
-                        _UserInterfaceTimer.Stop();
-                    _eBackgroundTask = BackgroundMessage.nType.Stop;           // this is messy but I could not figure out something better:
-                    _BackgroundThread = new BackgroundThread(_Cryptography);   // the new RSACryptoServiceProvider() does not react to a ThreadAbortException
-                    isProgressBarIndeterminate = false;                        // so we let it run and continue with a new BackgroundThread() instead
-                    sBackgroundStatus = string.Empty;
-                }
-                NotifyPropertyChanged("sCreateOrCancel");
-            }
-        }
-
         /// <summary>Delegate method invoked by dcReadDrivesAndKeys.</summary>
         private void ExecuteReadDrivesAndKeys()
         {
             ReadDrivesAndKeys();
-            RequeryDisplayedDrives();
-            RequeryDisplayedKeys();
-        }
-
-        /// <summary>Delegate method invoked by dcSaveKey.</summary>
-        private void ExecuteSaveKey()
-        {
-            if (isExecuteSaveKey)
-            {
-                CryptoKey KeyToSave = _SelectedKey;
-                KeyToSave.Save(_SelectedKeyDrive);
-                SelectedKey = null;
-                RequeryDisplayedKeys();
-                SelectedKey = KeyToSave;
-            }
-        }
-
-        /// <summary></summary>
-        protected bool CanExecuteSaveKey()
-        {
-            return isExecuteSaveKey;
-        }
-
-        /// <summary>Delegate method invoked by dcSaveTask.</summary>
-        private void ExecuteSaveTask()
-        {
-
+            // RequeryDisplayedDrives();
+            // RequeryDisplayedKeys();
         }
 
         /// <summary>Delegate method invoked by dcSelectDestination.</summary>
         private void ExecuteSelectDestination()
         {
-            if (isDestinationAFile)
-                ExecuteOpenFileDialog(false, _DestinationDrive.eEncryptionType == Drive.nEncryptionType.FileAsymmetric ? Drive.csAsymmetricFileExtension : Drive.csSymmetricFileExtension);
-            else
-                ExecuteFolderBrowserDialog(false);
+            ExecuteFolderBrowserDialog(false);
         }
 
         /// <summary>Delegate method invoked by dcSelectSource.</summary>
         private void ExecuteSelectSource()
         {
-            if (isSourceAFile)
-                ExecuteOpenFileDialog(true, _SourceDrive.eEncryptionType == Drive.nEncryptionType.FileAsymmetric ? Drive.csAsymmetricFileExtension : Drive.csSymmetricFileExtension);
-            else
-                ExecuteFolderBrowserDialog(true);
+            ExecuteFolderBrowserDialog(true);
         }
 
         /// <summary></summary>
@@ -726,16 +403,16 @@
             using (System.Windows.Forms.FolderBrowserDialog FolderDialog = new System.Windows.Forms.FolderBrowserDialog
             {
                 Description = isSourceFolder ? sSelectSourceDirectory : sSelectDestinationDirectory,
-                SelectedPath = isSourceFolder ? sSourceFileOrDirectory : sDestinationFileOrDirectory,
+                SelectedPath = isSourceFolder ? sSourceDirectory : sDestinationDirectory,
                 ShowNewFolderButton = !isSourceFolder
             })
             {
                 if (FolderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     if (isSourceFolder)
-                        sSourceFileOrDirectory = FolderDialog.SelectedPath;
+                        sSourceDirectory = FolderDialog.SelectedPath;
                     else
-                        sDestinationFileOrDirectory = FolderDialog.SelectedPath;
+                        sDestinationDirectory = FolderDialog.SelectedPath;
                 }
             }
         }
@@ -746,10 +423,10 @@
             using (System.Windows.Forms.OpenFileDialog FileDialog = new System.Windows.Forms.OpenFileDialog
             {
                 Title = isSourceFile ? sSelectSourceFile : sSelectDestinationFile,
-                InitialDirectory = isSourceFile ? sSourceFileOrDirectory : sDestinationFileOrDirectory,
+                InitialDirectory = isSourceFile ? sSourceDirectory : sDestinationDirectory,
                 DefaultExt = sDefaultExtension,
                 FilterIndex = 1,
-                Filter = Translate(isSourceFile ? "SourceFile" : "DestinationFile") + " (*" + Drive.csAsymmetricFileExtension + ";*" + Drive.csSymmetricFileExtension + ")|*" + Drive.csAsymmetricFileExtension + ";*" + Drive.csSymmetricFileExtension,
+                Filter = Translate(isSourceFile ? "SourceFile" : "DestinationFile") + " (*" + Drive.csSymmetricFileExtension + ")|*" + Drive.csSymmetricFileExtension,
                 CheckFileExists = isSourceFile,
                 Multiselect = false
             })
@@ -757,9 +434,9 @@
                 if (FileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     if (isSourceFile)
-                        sSourceFileOrDirectory = FileDialog.FileName;
+                        sSourceDirectory = FileDialog.FileName;
                     else
-                        sDestinationFileOrDirectory = FileDialog.FileName;
+                        sDestinationDirectory = FileDialog.FileName;
                 }
             }
         }
@@ -791,9 +468,9 @@
                 _SourceDrive = _DestinationDrive;
                 _DestinationDrive = SwapDrive;
 
-                string sSwapFileOrDirectory = _sSourceFileOrDirectory;
-                _sSourceFileOrDirectory = _sDestinationFileOrDirectory;
-                _sDestinationFileOrDirectory = sSwapFileOrDirectory;
+                string sSwapDirectory = _sSourceDirectory;
+                _sSourceDirectory = _sDestinationDirectory;
+                _sDestinationDirectory = sSwapDirectory;
 
                 _SourceDrive.isSource = true;
                 _DestinationDrive.isSource = false;
@@ -802,21 +479,8 @@
                     SwapPair.SwapSourceAndDestination();
 
                 RequeryDisplayedPairs(true);
-                NotifyPropertyChanged("iRowHeightKeys");
-                NotifyPropertyChanged("blEncryptionKeys");
-                NotifyPropertyChanged("SelectedBlockSize");
-                NotifyPropertyChanged("blAuthenticationKeys");
-                NotifyPropertyChanged("SelectedSourceOption");
-                NotifyPropertyChanged("isEditKeys");
-                NotifyPropertyChanged("sCapacityInformation");
-                NotifyPropertyChanged("VisibleWhenEncrypted");
-                NotifyPropertyChanged("SelectedEncryptionKey");
-                NotifyPropertyChanged("sSourceFileOrDirectory");
-                NotifyPropertyChanged("SelectedFileSystemLevel");
-                NotifyPropertyChanged("SelectedAuthenticationKey");
-                NotifyPropertyChanged("SelectedDestinationOption");
-                NotifyPropertyChanged("sDestinationFileOrDirectory");
-                NotifyPropertyChanged("iRowHeightEncryptedDirectory");
+                NotifyPropertyChanged("sSourceDirectory");
+                NotifyPropertyChanged("sDestinationDirectory");
             }
         }
 
@@ -826,7 +490,6 @@
             int iNewProgressBarMaximum = 0;
             long kTotalBytesToEncrypt = 0;
             IEnumerable<PairOfFiles> qySynchronizeFirst, qyDeleteLast;
-            Queue<BackgroundMessage> quEncrypt;
 
             if (isExecuteSynchronizeCancelOrRecompare)
             {
@@ -834,7 +497,7 @@
                 {
                     if (isExecuteSynchronize)
                     {
-                        if ((_eSynchronizationMode == PairOfFiles.nSynchronizationMode.WithDelete) && isDestinationADirectory)
+                        if (_eSynchronizationMode == PairOfFiles.nSynchronizationMode.WithDelete)
                         {
                             // overwrite with newer data, directories first
                             qySynchronizeFirst = from p in _ltPairs where (p.eComparison == PairOfFiles.nComparison.SourceOnly) || (p.eComparison == PairOfFiles.nComparison.SourceNewer) orderby !p.isDirectory, p.sRelativePath select p;
@@ -847,48 +510,12 @@
                             qyDeleteLast = null;
                         }
 
-                        if ((isSourceADirectory) && (isDestinationADirectory))
+                        foreach (PairOfFiles UnsynchronizedPair in qySynchronizeFirst)
                         {
-                            foreach (PairOfFiles UnsynchronizedPair in qySynchronizeFirst)
-                            {
-                                UnsynchronizedPair.eSynchronizationMode = _eSynchronizationMode;
-                                iNewProgressBarMaximum += UnsynchronizedPair.iMaximumProgress;
-                                _BackgroundThread.Enqueue(new BackgroundMessage(BackgroundMessage.nType.Synchronize, UnsynchronizedPair));
-                            }
-                        }
-                        else if (isSourceAFile)
-                        {
-                            _BackgroundThread.Enqueue(new BackgroundMessage(BackgroundMessage.nType.DecryptFile, new PairOfFiles(_SourceDrive, _DestinationDrive)));
-                            // TODO set up progress bar
-                            // TODO PairOfFiles.nSynchronizationMode.WithDelete
-                        }
-                        else
-                        {
-                            quEncrypt = new Queue<BackgroundMessage>();
-
-                            foreach (PairOfFiles UnsynchronizedPair in qySynchronizeFirst)
-                                kTotalBytesToEncrypt += UnsynchronizedPair.kBytesToEncryptSource;
-
-                            _DestinationDrive.aAsymmetricEncryptionKeys = new CryptoKey[2];
-                            _DestinationDrive.aAsymmetricEncryptionKeys[0] = _DestinationDrive.SelectedEncryptionKey;
-                            _DestinationDrive.aAsymmetricEncryptionKeys[1] = _DestinationDrive.SelectedAuthenticationKey;
-
-                            _BackgroundThread.Enqueue(new BackgroundMessage(BackgroundMessage.nType.StartEncryption, _DestinationDrive, kTotalBytesToEncrypt > int.MaxValue ? int.MaxValue : (int)kTotalBytesToEncrypt));
-                            _BackgroundThread.Enqueue(new BackgroundMessage(BackgroundMessage.nType.EncryptionIndexCount, _DestinationDrive, qySynchronizeFirst.Count()));
-
-                            foreach (PairOfFiles Pair in qySynchronizeFirst)
-                            {
-                                Pair.eSynchronizationMode = _eSynchronizationMode;
-                                iNewProgressBarMaximum += Pair.iMaximumProgress;
-                                _BackgroundThread.Enqueue(new BackgroundMessage(BackgroundMessage.nType.EncryptAttributes, Pair));
-                                quEncrypt.Enqueue(new BackgroundMessage(BackgroundMessage.nType.EncryptFile, Pair));
-                            }
-
-                            while (quEncrypt.Count > 0)
-                                _BackgroundThread.Enqueue(quEncrypt.Dequeue());
-
-                            _BackgroundThread.Enqueue(new BackgroundMessage(BackgroundMessage.nType.FinishEncryption, new PairOfFiles(null, _DestinationDrive)));
-                        }
+                            UnsynchronizedPair.eSynchronizationMode = _eSynchronizationMode;
+                            iNewProgressBarMaximum += UnsynchronizedPair.iMaximumProgress;
+                            _BackgroundThread.Enqueue(new BackgroundMessage(BackgroundMessage.nType.Synchronize, UnsynchronizedPair));
+                        }                     
 
                         if (qyDeleteLast != null)
                         {
@@ -950,16 +577,6 @@
         }
 
         /// <summary></summary>
-        private void FocusKeyValue()
-        {
-            if (!isKeyValueReadOnly)
-            {
-                isKeyValueFocused = false;
-                isKeyValueFocused = true;
-            }
-        }
-
-        /// <summary></summary>
         /// <param name=""></param>
         /// <param name=""></param>
         private bool IsSynchronizationAllowed(string sFirstDirectory, string sSecondDirectory)
@@ -984,18 +601,6 @@
 
         /// <summary></summary>
         /// <param name=""></param>
-        private BitmapSource LoadBitmap(string sFileName)
-        {
-            // string sPathToAsset = SearchForAsset(sFileName);
-            // 
-            // if (!string.IsNullOrEmpty(sPathToAsset))
-            //     return new BitmapSource(sPathToAsset);
-            // else
-            return null;
-        }
-
-        /// <summary></summary>
-        /// <param name=""></param>
         private string ModeInformationPhrase(bool isDelete)
         {
             string sReturn = string.Empty;
@@ -1007,24 +612,6 @@
                 case PairOfFiles.nSynchronizationMode.NoDelete: sReturn = Translate("Skipped"); break;
             }
             return sReturn;
-        }
-
-        /// <summary></summary>
-        private void NotifyPropertyChangedEncryptionType()
-        {
-            NotifyPropertyChanged("isEditKeys");
-            NotifyPropertyChanged("sEncryptionKey");
-            NotifyPropertyChanged("iRowHeightKeys");
-            NotifyPropertyChanged("blEncryptionKeys");
-            NotifyPropertyChanged("iRowHeightEncrypted");
-            NotifyPropertyChanged("sCapacityInformation");
-            NotifyPropertyChanged("VisibleWhenEncrypted");
-            NotifyPropertyChanged("blAuthenticationKeys");
-            NotifyPropertyChanged("SelectedDestinationOption");
-            NotifyPropertyChanged("sDestinationFileOrDirectory");
-            NotifyPropertyChanged("iRowHeightEncryptedDirectory");
-            NotifyPropertyChanged("VisibleWhenDestinationIsDirectory");
-            NotifyPropertyChanged("VisibleWhenDestinationDirectoryIsSymmetric");
         }
 
         /// <summary></summary>
@@ -1043,25 +630,11 @@
             DriveInfo[] _aDriveInfo = DriveInfo.GetDrives();
 
             _ltDrives.Clear();
-            _ltKeys.Clear();
             foreach (DriveInfo Info in _aDriveInfo)
             {
                 NewDrive = new Drive(Info);
                 _ltDrives.Add(NewDrive);
-
-                if ((NewDrive.ltKeysStored != null) && (NewDrive.ltKeysStored.Count > 0))
-                {
-                    foreach (CryptoKey Key in NewDrive.ltKeysStored)
-                        AddKey(Key);
-                }
             }
-        }
-
-        /// <summary></summary>
-        private void RemoveKey(CryptoKey Key)
-        {
-            if (_ltKeys.Contains(Key))
-                _ltKeys.Remove(Key);
         }
 
         private string ReplaceExtension(string sFilePath, string sOldExtension, string sNewExtension)
@@ -1070,58 +643,6 @@
                 return sFilePath;
             else
                 return sFilePath.Substring(0, sFilePath.Length - sOldExtension.Length) + sNewExtension;
-        }
-
-        /// <summary></summary>
-        private void RequeryDisplayedDrives()
-        {
-            Drive DummyDrive = new Drive(Translate("EmptyDriveName"));
-            IEnumerable<Drive> qyDrives;
-
-            _blDrives.Clear();
-            _blDrives.Add(DummyDrive);
-
-            qyDrives = from d in _ltDrives where d.isReady orderby d.sName select d;
-            foreach (Drive NewDrive in qyDrives)
-                _blDrives.Add(NewDrive);
-
-            if (_blDrives.Count == 0)
-                SelectedDrive = null;
-            else
-                SelectedDrive = _blDrives[0];
-        }
-
-
-        /// <summary></summary>
-        private void RequeryDisplayedKeys()
-        {
-            IEnumerable<CryptoKey> qyKeys;
-
-            _blKeys.Clear();
-            _blAsymmetricKeys.Clear();
-            _blPrivateKeys.Clear();
-            _blSymmetricKeys.Clear();
-            qyKeys = from k in _ltKeys where k.eType != CryptoKey.nKeyType.Invalid orderby k.sName, k.sDrive select k;
-            foreach (CryptoKey NewKey in qyKeys)
-            {
-                _blKeys.Add(NewKey);
-
-                switch(NewKey.eType)
-                {
-                    case CryptoKey.nKeyType.AsymmetricPrivate:  if (_blAsymmetricKeys.SingleOrDefault(key => (key.sName == NewKey.sName)) == null)
-                                                                    _blAsymmetricKeys.Add(NewKey);
-                                                                if (_blPrivateKeys.SingleOrDefault(key => (key.sName == NewKey.sName)) == null)
-                                                                    _blPrivateKeys.Add(NewKey);
-                                                                break;
-                    case CryptoKey.nKeyType.AsymmetricPublic:   if (_blAsymmetricKeys.SingleOrDefault(key => (key.sName == NewKey.sName)) == null)
-                                                                    _blAsymmetricKeys.Add(NewKey);
-                                                                break;
-                    case CryptoKey.nKeyType.Symmetric:          if (_blSymmetricKeys.SingleOrDefault(key => (key.sName == NewKey.sName)) == null)
-                                                                    _blSymmetricKeys.Add(NewKey);
-                                                                break;
-                }
-            }
-            SelectedKey = null;
         }
 
         /// <summary></summary>
@@ -1159,56 +680,6 @@
             NotifyPropertyChanged("sHeaderError");
         }
 
-        /// <summary></summary>
-        /// <param name=""></param>
-        private string SearchForAsset(string sFileName)
-        {
-            const string csAssestsDirectory = "/Assets/";
-
-            string sPathToAsset;
-
-            if (File.Exists(_sApplicationDirectory + csAssestsDirectory + sFileName))
-                sPathToAsset = _sApplicationDirectory + csAssestsDirectory + sFileName;
-            else if (File.Exists(_sApplicationDirectory + "/" + sFileName))
-                sPathToAsset = _sApplicationDirectory + "/" + sFileName;
-            else
-                sPathToAsset = string.Empty;
-
-            return sPathToAsset;
-        }
-
-        /// <summary></summary>
-        private void SetSelectedKeyNumeral()
-        {
-            if (_SelectedKey == null || _SelectedKey.eType == CryptoKey.nKeyType.Invalid)
-            {
-                blKeyNumerals = null;
-                _iSelectedKeyNumeral = 0;
-            }
-            else if (_SelectedKey.eType == CryptoKey.nKeyType.Symmetric)
-            {
-                blKeyNumerals = _blKeyNumeralsPrivate;
-                _iSelectedKeyNumeral = _iKeyNumeralIfCanHide;
-            }
-            else if ((_eSelectedKeyParameterAsymmetric == CryptoKey.nKeyParameter.Email) || (_eSelectedKeyParameterAsymmetric == CryptoKey.nKeyParameter.Homepage) || (_eSelectedKeyParameterAsymmetric == CryptoKey.nKeyParameter.Owner))
-            {
-                blKeyNumerals = _blKeyTextPublic;
-                _iSelectedKeyNumeral = 1;
-            }
-            else if ((_eSelectedKeyParameterAsymmetric == CryptoKey.nKeyParameter.Exponent) || (_eSelectedKeyParameterAsymmetric == CryptoKey.nKeyParameter.Modulus))
-            {
-                blKeyNumerals = _blKeyNumeralsPublic;
-                if (_iSelectedKeyNumeral < 2)
-                    _iSelectedKeyNumeral = 16;
-            }
-            else
-            {
-                blKeyNumerals = _blKeyNumeralsPrivate;
-                _iSelectedKeyNumeral = _iKeyNumeralIfCanHide;
-            }
-            NotifyPropertyChanged("SelectedKeyNumeral");
-        }
-
         /// <summary>Timer event handler that updates the user interface in regular intervals.</summary>
         /// <param name=""></param>
         /// <param name=""></param>
@@ -1225,26 +696,6 @@
                 {
                     switch (BackgroundMessage.eType)
                     {
-                        case BackgroundMessage.nType.DecryptIndex:
-                            if (BackgroundMessage.PairProperty != null)
-                            {
-                                if (BackgroundMessage.PairProperty.DestinationDrive != null)
-                                {
-                                    NotifyPropertyChanged("SelectedAuthenticationKey");
-                                    NotifyPropertyChanged("SelectedEncryptionKey");
-                                }
-                            }
-                            break;
-
-                        case BackgroundMessage.nType.FillKey:
-                            if (BackgroundMessage.KeyProperty != null)
-                            {
-                                AddKey(BackgroundMessage.KeyProperty);
-                                RequeryDisplayedKeys();
-                                SelectedKey = BackgroundMessage.KeyProperty;
-                            }
-                            break;
-
                         case BackgroundMessage.nType.NewPair:
                             if (BackgroundMessage.PairProperty != null)
                             {
