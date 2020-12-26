@@ -153,10 +153,18 @@ namespace BackupAes256.Model
                 {
                     if (PairToCopy.SourceDrive.eEncryptionType == Drive.nEncryptionType.DirectoryUnencrypted)
                     {
-                        using (FileStream SourceStream = new FileStream(PairToCopy.sSourcePath, FileMode.Open, FileAccess.Read))
+                        if (PairToCopy.DestinationDrive.kFreeSpace < PairToCopy.kSourceSize)
                         {
-                            using (FileStream DestinationStream = new FileStream(PairToCopy.sDestinationPath, FileMode.Create, FileAccess.Write))
-                                CopyWithProgress(SourceStream, DestinationStream);
+                            PairToCopy.eComparison = PairOfFiles.nComparison.Error;
+                            PairToCopy.sErrorMessage = "Zu wenig Speicherplatz auf dem Ziellaufwerk.";
+                        }
+                        else
+                        {
+                            using (FileStream SourceStream = new FileStream(PairToCopy.sSourcePath, FileMode.Open, FileAccess.Read))
+                            {
+                                using (FileStream DestinationStream = new FileStream(PairToCopy.sDestinationPath, FileMode.Create, FileAccess.Write))
+                                    CopyWithProgress(SourceStream, DestinationStream);
+                            }
                         }
                     }
                 }
@@ -168,23 +176,26 @@ namespace BackupAes256.Model
 
                 if (_eState == nState.Working)
                 {
-                    PairToCopy.CopyProperties();
-                    try
+                    if (PairToCopy.eComparison != PairOfFiles.nComparison.Error)
                     {
-                        FileInfoDestination.Attributes = (FileAttributes)PairToCopy.uAttributesSource;
-                        FileInfoDestination.CreationTime = PairToCopy.CreationTimeSource;
-                        FileInfoDestination.LastAccessTime = PairToCopy.LastAccessTimeSource;
-                        FileInfoDestination.LastWriteTime = PairToCopy.LastWriteTimeSource;
+                        PairToCopy.CopyProperties();
+                        try
+                        {
+                            FileInfoDestination.Attributes = (FileAttributes)PairToCopy.uAttributesSource;
+                            FileInfoDestination.CreationTime = PairToCopy.CreationTimeSource;
+                            FileInfoDestination.LastAccessTime = PairToCopy.LastAccessTimeSource;
+                            FileInfoDestination.LastWriteTime = PairToCopy.LastWriteTimeSource;
 
-                        // synchronize the write time of the containing directory back to its original value
-                        // there is no point of resetting LastAccessTime as it also gets changed by reading access
-                        if (PairToCopy.ParentDirectory != null)
-                            Directory.SetLastWriteTime(PairToCopy.ParentDirectory.sDestinationPath, PairToCopy.ParentDirectory.LastWriteTimeDestination);
+                            // synchronize the write time of the containing directory back to its original value
+                            // there is no point of resetting LastAccessTime as it also gets changed by reading access
+                            if (PairToCopy.ParentDirectory != null)
+                                Directory.SetLastWriteTime(PairToCopy.ParentDirectory.sDestinationPath, PairToCopy.ParentDirectory.LastWriteTimeDestination);
+                        }
+                        catch { }
+                        PairToCopy.eComparison = PairOfFiles.nComparison.Identical;
                     }
-                    catch { }
-                    PairToCopy.eComparison = PairOfFiles.nComparison.Identical;
                 }
-                else
+                else   // _eState == nState.CancelRequested
                 {
                     try
                     {

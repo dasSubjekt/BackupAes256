@@ -39,7 +39,6 @@
             _dyTranslations.Add("Deleted", "deleted");
             _dyTranslations.Add("DestinationDateText", "destination date");
             _dyTranslations.Add("DestinationDirectoryMissing", "The destination directory does not exist.");
-            _dyTranslations.Add("DestinationDirectorySymmetric", "destination directory  (" + Drive.csSymmetricFileExtension + ")");
             _dyTranslations.Add("DestinationDirectoryText", "destination directory");
             _dyTranslations.Add("DestinationFile", "destination file");
             _dyTranslations.Add("DestinationNewer", "destination newer");
@@ -91,7 +90,7 @@
             _dyTranslations.Add("OnDrive", "save on drive");
             _dyTranslations.Add("PleaseCheck", "please check");
             _dyTranslations.Add("ProgrammingError", "A programming error occurred. I am sorry, this should not have happened.");
-            _dyTranslations.Add("ProgramVersion", "Program version " + sProgramVersion + " of 05/07/2020 is ready.");
+            _dyTranslations.Add("ProgramVersion", "Program version " + sProgramVersion + " of 26/12/2020 is ready.");
             _dyTranslations.Add("Progress", "progress");
             _dyTranslations.Add("ReadDrivesAndKeys", "re-read drives");
             _dyTranslations.Add("RelativePathText", "relative path");
@@ -108,7 +107,6 @@
             _dyTranslations.Add("Skipped", "skipped");
             _dyTranslations.Add("SourceDateText", "source date");
             _dyTranslations.Add("SourceDirectoryMissing", "The source directory does not exist.");
-            _dyTranslations.Add("SourceDirectorySymmetric", "source directory  (" + Drive.csSymmetricFileExtension + ")");
             _dyTranslations.Add("SourceDirectoryText", "source directory");
             _dyTranslations.Add("SourceFile", "source file");
             _dyTranslations.Add("SourceFileMissing", "The source file does not exist.");
@@ -128,7 +126,7 @@
             _dyTranslations.Add("UseWorkingMemory", "use working memory up to");
             _dyTranslations.Add("WillBe", "will be ");
             _dyTranslations.Add("WillBeSkipped", "will be skipped");
-            _dyTranslations.Add("WindowTitle", "Backup and file synchronization");
+            _dyTranslations.Add("WindowTitle", "File synchronization and mirrored backups");
             _dyTranslations.Add("WrongFileFormat", "File »{0:s}« has a wrong format and could not be read.");
 
 #elif DEUTSCH
@@ -151,7 +149,6 @@
             _dyTranslations.Add("Deleted", "gelöscht");
             _dyTranslations.Add("DestinationDateText", "Datum Ziel");
             _dyTranslations.Add("DestinationDirectoryMissing", "Das Zielvereichnis existiert nicht.");
-            _dyTranslations.Add("DestinationDirectorySymmetric", "Zielverzeichnis  (" + Drive.csSymmetricFileExtension + ")");
             _dyTranslations.Add("DestinationDirectoryText", "Zielverzeichnis");
             _dyTranslations.Add("DestinationFile", "Zieldatei");
             _dyTranslations.Add("DestinationNewer", "neueres Ziel");
@@ -204,7 +201,7 @@
             _dyTranslations.Add("OnDrive", "auf Laufwerk");
             _dyTranslations.Add("PleaseCheck", "bitte überprüfen");
             _dyTranslations.Add("ProgrammingError", "Ein Programmierfehler ist aufgetreten. Entschuldigung, das hätte nicht passieren dürfen.");
-            _dyTranslations.Add("ProgramVersion", "Die Programmversion " + sProgramVersion + " vom 05.07.2020 ist bereit.");
+            _dyTranslations.Add("ProgramVersion", "Die Programmversion " + sProgramVersion + " vom 26.12.2020 ist bereit.");
             _dyTranslations.Add("Progress", "Fortschritt");
             _dyTranslations.Add("ReadDrivesAndKeys", "Laufwerke neu lesen");
             _dyTranslations.Add("RelativePathText", "Relativer Pfad");
@@ -221,7 +218,6 @@
             _dyTranslations.Add("Skipped", "übersprungen");
             _dyTranslations.Add("SourceDateText", "Datum Quelle");
             _dyTranslations.Add("SourceDirectoryMissing", "Das Quellvereichnis existiert nicht.");
-            _dyTranslations.Add("SourceDirectorySymmetric", "Quellverzeichnis  (" + Drive.csSymmetricFileExtension + ")");
             _dyTranslations.Add("SourceDirectoryText", "Quellverzeichnis");
             _dyTranslations.Add("SourceFile", "Quelldatei");
             _dyTranslations.Add("SourceFileMissing", "Die Quelldatei existiert nicht.");
@@ -241,7 +237,7 @@
             _dyTranslations.Add("UseWorkingMemory", "Arbeitsspeicher nutzen bis");
             _dyTranslations.Add("WillBe", "werden ");
             _dyTranslations.Add("WillBeSkipped", "werden übersprungen");
-            _dyTranslations.Add("WindowTitle", "Sicherungskopien und Dateisynchronisierung");
+            _dyTranslations.Add("WindowTitle", "Dateisynchronisierung und gespiegelte Sicherungskopien");
             _dyTranslations.Add("WrongFileFormat", "Die Datei »{0:s}« hat ein falsches Format und kann nicht gelesen werden.");
 #endif
             _dyTranslations.Add("HiddenKey", "●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●");
@@ -253,7 +249,7 @@
             _ltDrives = new List<Drive>();
             _ltPairs = new List<PairOfFiles>();
             _blPairs = new BindingList<PairOfFiles>();
-            _Cryptography = new CryptoServices();
+            _Cryptography = null;
             _DestinationDrive = new Drive(_Cryptography, false);
             _SourceDrive = new Drive(_Cryptography, true);
             _BackgroundThread = new BackgroundThread(_Cryptography);
@@ -285,9 +281,7 @@
             _UserInterfaceTimer.Tick += new EventHandler(UserInterfaceTimerTick);
             _UserInterfaceTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
 
-            _sApplicationDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             sTemporaryDirectory = Path.GetTempPath();
-
             ExecuteReadDrivesAndKeys();
 
             dcCompare = new DelegateCommand(ExecuteCompare, CanExecuteCompare);
@@ -360,7 +354,6 @@
                 {
                     isProgressBarIndeterminate = true;   // until we know how many files we are processing, show at least that there is some activity
                     _eBackgroundTask = BackgroundMessage.nType.Compare;
-                    // eCaseTab = PairOfFiles.nComparison.Identical;
                     eMenuTab = nMenuTab.Progress;
                     _UserInterfaceTimer.Start();
                     NotifyPropertyChanged("sSynchronizeCancelOrRecompare");
@@ -371,10 +364,10 @@
         /// <summary>Delegate method invoked by dcF5.</summary>
         private void ExecuteF5()
         {
-            if (isExecuteF5)
-            {
-                ExecuteReadDrivesAndKeys();
-            }
+            // if (isExecuteF5)
+            // {
+            //     ExecuteReadDrivesAndKeys();
+            // }
         }
 
         /// <summary>Delegate method invoked by dcReadDrivesAndKeys.</summary>
@@ -413,30 +406,6 @@
                         sSourceDirectory = FolderDialog.SelectedPath;
                     else
                         sDestinationDirectory = FolderDialog.SelectedPath;
-                }
-            }
-        }
-
-        /// <summary></summary>
-        private void ExecuteOpenFileDialog(bool isSourceFile, string sDefaultExtension)
-        {
-            using (System.Windows.Forms.OpenFileDialog FileDialog = new System.Windows.Forms.OpenFileDialog
-            {
-                Title = isSourceFile ? sSelectSourceFile : sSelectDestinationFile,
-                InitialDirectory = isSourceFile ? sSourceDirectory : sDestinationDirectory,
-                DefaultExt = sDefaultExtension,
-                FilterIndex = 1,
-                Filter = Translate(isSourceFile ? "SourceFile" : "DestinationFile") + " (*" + Drive.csSymmetricFileExtension + ")|*" + Drive.csSymmetricFileExtension,
-                CheckFileExists = isSourceFile,
-                Multiselect = false
-            })
-            {
-                if (FileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    if (isSourceFile)
-                        sSourceDirectory = FileDialog.FileName;
-                    else
-                        sDestinationDirectory = FileDialog.FileName;
                 }
             }
         }

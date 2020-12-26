@@ -57,11 +57,11 @@
                     </Grid.RowDefinitions>
 
                     <Label Grid.Row="2" Grid.Column="0" Content="{Binding sSourceDirectoryText}" HorizontalAlignment="Left" Margin="0,17,10,0" />
-                    <vm:DragDropTextBox Grid.Row="2" Grid.Column="1" Text="{Binding sSourceDirectory, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" AllowedFileExtensions="{Binding asAllowedFileExtensions, Mode=OneWay}" Height="28" VerticalContentAlignment="Center" Margin="0" />
+                    <vm:DragDropTextBox Grid.Row="2" Grid.Column="1" Text="{Binding sSourceDirectory, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" Height="28" VerticalContentAlignment="Center" Margin="0" />
                     <Button Grid.Row="2" Grid.Column="2" Content="{Binding sSelect}" Height="28" Command="{Binding dcSelectSource}" Margin="10,0,0,0" />
 
                     <Label Grid.Row="4" Grid.Column="0" Content="{Binding sDestinationDirectoryText}" HorizontalAlignment="Left" Margin="0,17,10,0" />
-                    <vm:DragDropTextBox Grid.Row="4" Grid.Column="1" Text="{Binding sDestinationDirectory, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" AllowedFileExtensions="{Binding asAllowedFileExtensions, Mode=OneWay}" Height="28" VerticalContentAlignment="Center" Margin="0" />
+                    <vm:DragDropTextBox Grid.Row="4" Grid.Column="1" Text="{Binding sDestinationDirectory, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" Height="28" VerticalContentAlignment="Center" Margin="0" />
                     <Button Grid.Row="4" Grid.Column="2" Content="{Binding sSelect}" Height="28" Command="{Binding dcSelectDestination}" Margin="10,0,0,0" />
 
                     <Button Grid.Row="11" Grid.Column="1" Content="{Binding sSwap}" Command="{Binding dcSwap}" HorizontalAlignment="Right" Height="28" Width="95" Margin="10,0,0,0"/>

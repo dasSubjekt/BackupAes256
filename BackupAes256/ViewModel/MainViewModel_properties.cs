@@ -23,7 +23,7 @@
         private bool _isDragOverTasks, _isProgressBarIndeterminate;
         private int _iProgressBarValue, _iProgressBarMaximum;
         private readonly int[] _aiPairsCount, _aiPairsOrder;
-        private string _sApplicationDirectory, _sBackgroundStatus, _sDestinationDirectory, _sSourceDirectory, _sTaskName, _sTemporaryDirectory;
+        private string _sBackgroundStatus, _sDestinationDirectory, _sSourceDirectory, _sTaskName, _sTemporaryDirectory;
         private nMenuTab _eMenuTab;
         private PairOfFiles.nComparison _eCaseTab;
         private PairOfFiles.nSynchronizationMode _eSynchronizationMode;
@@ -118,12 +118,6 @@
 
 
         /// <summary></summary>
-        public string[] asAllowedFileExtensions
-        {
-            get { return new string[1] { Drive.csSymmetricFileExtension }; }
-        }
-
-        /// <summary></summary>
         public string sBackgroundStatus
         {
             get { return _sBackgroundStatus; }
@@ -187,12 +181,24 @@
             {
                 if (value != _sDestinationDirectory)
                 {
-                    _sDestinationDirectory = value;
+                    string sAdaptedPath;
 
-                    if (value != _DestinationDrive.sRootPathAndFile)
-                        _DestinationDrive.sRootPathAndFile = value;
+                    _sDestinationDirectory = value;
+                    _DestinationDrive.sRootPath = value;
+
+                    foreach (Drive DriveToTry in _ltDrives)
+                    {
+                        if (_DestinationDrive.sName != DriveToTry.sName)
+                        {
+                            sAdaptedPath = DriveToTry.AdaptPath(value);
+
+                            if (Directory.Exists(sAdaptedPath))
+                                sSourceDirectory = sAdaptedPath;
+                        }
+                    }
 
                     ValidateRaiseErrorsChanged(nValidationType.Single, "sDirectory", _sDestinationDirectory != _sSourceDirectory, Translate("ErrorDirectoriesIdentical"));
+
                     NotifyPropertyChanged("sStatus");
                     NotifyPropertyChanged("sDestinationDirectory");
                     CommandManager.InvalidateRequerySuggested();
@@ -514,10 +520,21 @@
             {
                 if (value != _sSourceDirectory)
                 {
-                    _sSourceDirectory = value;
+                    string sAdaptedPath;
 
-                    if (value != _SourceDrive.sRootPathAndFile)
-                        _SourceDrive.sRootPathAndFile = value;
+                    _sSourceDirectory = value;
+                    _SourceDrive.sRootPath = value;
+
+                    foreach (Drive DriveToTry in _ltDrives)
+                    {
+                        if (_SourceDrive.sName != DriveToTry.sName)
+                        {
+                            sAdaptedPath = DriveToTry.AdaptPath(value);
+
+                            if (Directory.Exists(sAdaptedPath))
+                                sDestinationDirectory = sAdaptedPath;
+                        }
+                    }
 
                     ValidateRaiseErrorsChanged(nValidationType.Single, "sSourceDirectory", Directory.Exists(_sSourceDirectory), Translate("SourceDirectoryMissing"));
                     ValidateRaiseErrorsChanged(nValidationType.Single, "sDirectory", _sSourceDirectory != _sDestinationDirectory, Translate("ErrorDirectoriesIdentical"));

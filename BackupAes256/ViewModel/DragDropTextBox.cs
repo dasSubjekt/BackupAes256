@@ -20,14 +20,6 @@
 
         #region properties
 
-        private static readonly DependencyProperty AllowedFileExtensionsProperty = DependencyProperty.Register("AllowedFileExtensions", typeof(string[]), typeof(DragDropTextBox));
-
-        public string[] AllowedFileExtensions
-        {
-            get { return (string[])GetValue(AllowedFileExtensionsProperty); }
-            set { SetValue(AllowedFileExtensionsProperty, value); }
-        }
-
         #endregion
 
         #region methods
@@ -43,17 +35,7 @@
                 if ((asFileNames != null) && (asFileNames.Length == 1))
                 {
                     if (Directory.Exists(asFileNames[0]))
-                    {
                         Return = DragDropEffects.Copy;
-                    }
-                    else if ((AllowedFileExtensions != null) && File.Exists(asFileNames[0]))
-                    {
-                        foreach (string sFileExtension in AllowedFileExtensions)
-                        {
-                            if ((asFileNames[0].Length > sFileExtension.Length) && (asFileNames[0].Substring(asFileNames[0].Length - sFileExtension.Length) == sFileExtension))
-                                Return = DragDropEffects.Copy;
-                        }
-                    }
                 }
             }
             return Return;

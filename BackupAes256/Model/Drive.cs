@@ -16,7 +16,6 @@
         private const int ciDefaultFileSystemBlockSize = 0x1000;   //    4 KB
         public const int ciFileSizeLimitForTesting = 1048576000;   // 1000 MB
 
-        public const string csSymmetricFileExtension = ".aes";
         private const string csAppDataSubdirectory = "\\BackupAes256";
         private const string csProgramDataDirectory = "ProgramData";
         private const string csWindowsDirectory = "Windows";
@@ -25,12 +24,11 @@
 
         private bool _isCanSetupEncryptedDirectory, _isReady, _isSource;
         private readonly bool _isReadOnly;
-        private byte[] _abFileBlockBuffer;
         private readonly byte[] _abCopyBuffer;
         private char _cDirectorySeparator;
-        private int _iFileSystemBlockSize, _iLevelsInRootPath;
-        private long _kFreeSpace, _kTotalSize;
-        private string _sEncryptedFileName, _sFormat, _sName, _sRootPath, _sSettingsDirectory, _sTemporaryDirectory, _sTemporaryFilePath, _sVolumeLabel;
+        private int _iLevelsInRootPath;
+        private long _kTotalSize;
+        private string _sFormat, _sName, _sRootPath, _sSettingsDirectory, _sTemporaryDirectory, _sTemporaryFilePath, _sVolumeLabel;
         private DriveType _Type;
         private nEncryptionType _eEncryptionType;
         private readonly List<PairOfFiles> _ltEncryptedPairs;
@@ -44,12 +42,10 @@
         {
             _isCanSetupEncryptedDirectory = _isReadOnly = _isReady = _isSource = false;
             _cDirectorySeparator = '\\';
-            _iFileSystemBlockSize = ciDefaultFileSystemBlockSize;
             _abCopyBuffer = new byte[PairOfFiles.ciBytesPerProgressUnit];
-            _abFileBlockBuffer = new byte[_iFileSystemBlockSize];
             _iLevelsInRootPath = -1;
-            _kFreeSpace = _kTotalSize = -1;
-            _sEncryptedFileName = _sFormat = _sName = _sRootPath = _sSettingsDirectory = _sTemporaryDirectory = _sTemporaryFilePath = _sVolumeLabel = string.Empty;
+            _kTotalSize = -1;
+            _sFormat = _sName = _sRootPath = _sSettingsDirectory = _sTemporaryDirectory = _sTemporaryFilePath = _sVolumeLabel = string.Empty;
             _Type = DriveType.Unknown;
             _eEncryptionType = nEncryptionType.DirectoryUnencrypted;
             _ltEncryptedPairs = new List<PairOfFiles>();
@@ -83,11 +79,6 @@
                 throw new ArgumentNullException("DriveInfo required in class Drive");
 
             GetDriveInfo(Info);
-            if (_isReady)
-            {
-                // ReadKeys();
-                // ReadSettings();
-            }
         }
         #endregion
 
@@ -119,9 +110,14 @@
         }
 
         /// <summary></summary>
-        public byte[] abFileBlockBuffer
+        public long kFreeSpace
         {
-            get { return _abFileBlockBuffer; }
+            get
+            {
+                DriveInfo Info = new DriveInfo(_sName);
+
+                return Info.AvailableFreeSpace;
+            }
         }
 
         /// <summary></summary>
@@ -180,19 +176,6 @@
         }
 
         /// <summary></summary>
-        public string sRootPathAndFile
-        {
-            get { return ConcatenatePath(_sRootPath, _sEncryptedFileName); }
-            set
-            {
-                if (Path.HasExtension(value) && !Directory.Exists(value))
-                    sRootPath = Path.GetDirectoryName(value);
-                else
-                    sRootPath = value;
-            }
-        }
-
-        /// <summary></summary>
         public string sSettingsDirectory
         {
             get { return _sSettingsDirectory; }
@@ -221,6 +204,18 @@
         #endregion
 
         #region methods
+
+        /// <summary></summary>
+        /// <param name=""></param>
+        public string AdaptPath(string sExternalPath)
+        {
+            string sReturn = string.Empty;
+
+            if (!string.IsNullOrEmpty(_sName) && !string.IsNullOrEmpty(sExternalPath) && sExternalPath.Length >= _sName.Length)
+                sReturn = _sName + sExternalPath.Substring(_sName.Length);
+
+            return sReturn;
+        }
 
         /// <summary></summary>
         /// <param name=""></param>
@@ -312,7 +307,6 @@
             _isReady = Info.IsReady;
             if (_isReady)
             {
-                _kFreeSpace = Info.AvailableFreeSpace;
                 _sFormat = Info.DriveFormat;
                 _Type = Info.DriveType;
                 _sName = Info.Name;
@@ -343,25 +337,6 @@
                 return sReturn;
             else
                 return sReturn.TrimEnd(acTrimAndSplitCharacters);
-        }
-
-        /// <summary></summary>
-        /// <param name=""></param> 
-        public string RemoveLastLevel(string sPath)
-        {
-            int iPos;
-            string sReturn = string.Empty;
-
-            if (!string.IsNullOrEmpty(sPath))
-            {
-                if (sPath[sPath.Length - 1] == _cDirectorySeparator)
-                    sPath = sPath.Substring(0, sPath.Length - 1);
-
-                iPos = sPath.LastIndexOf(_cDirectorySeparator);
-                if (iPos > 0)
-                    sReturn = sPath.Substring(0, iPos);
-            }
-            return sReturn;
         }
 
         /// <summary></summary>
